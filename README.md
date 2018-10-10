@@ -3,7 +3,7 @@
 This project is based off of the following tutorial and base template
 https://docs.djangoproject.com/en/2.1/intro/tutorial01/
 
-# Prerequisite requirements
+# Setting up your environment
 
 First, before following the setup instructions, install conda on your machine
 Instructions: https://conda.io/docs/user-guide/install/macos.html
@@ -32,3 +32,20 @@ docs: Refactor of documentation, e.g. help files.
 ```
 
 Ex: `git commit -m "Add: Added API to urls.py"`
+
+
+# Useful Conda Commands
+
+Installing dependencies that were added to the environment.yml file
+```
+conda env update environment.yml
+conda activate photoTaggerEnv
+```
+Viewing current dependencies installed within an environment
+`conda list`
+
+###Sharing dependencies 
+
+Instead of doing a `conda install <package>` 
+you should manually add it to the environment.yml file and
+then follow the instructions above to perform a conda update
