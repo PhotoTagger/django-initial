@@ -99,8 +99,9 @@ def detect(image: Image):
 
 
 if __name__ == "__main__":
-    TEST_IMAGE_NAMES = ['image1.jpg', 'image2.jpg']
- 
+    # Get the file name for every image in the test_images folder
+    TEST_IMAGE_NAMES = [f for f in os.listdir('test_images') if os.path.isfile(os.path.join('test_images', f))]
+
     _PATH_TO_FROZEN_GRAPH = os.path.join('tfmodels', _MODEL_NAME, 'frozen_inference_graph.pb')
     _PATH_TO_LABELS = os.path.join('tfmodels', _MODEL_NAME, _LABEL_MAP_NAME)
     
@@ -117,10 +118,8 @@ if __name__ == "__main__":
         image = Image.open(os.path.join('test_images', image_name))
         print("Successfully loaded image " + image_name if image else "Failed to load image " + image_name)
 
-        tags = detect(image)
-        print("Detection Complete for " + image_name + ":")
-        print(tags)
-        print()
+        list_of_tags = ', '.join(map(str, detect(image)))
+        print('Detection Complete for {}:\n[{}] \n'.format(image_name, list_of_tags))
 else:
     # initalization sequence runs upon being imported
     _load_model()
