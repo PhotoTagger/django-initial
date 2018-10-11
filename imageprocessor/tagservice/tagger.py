@@ -2,7 +2,7 @@ import os
 import numpy as np
 import tensorflow as tf
 from PIL import Image
-import label_map_util
+from .tfutils import label_map_util
 
 _MODEL_NAME = 'ssd_mobilenet_v1_coco_2018_01_28'
 _LABEL_MAP_NAME = 'mscoco_label_map.pbtxt'
