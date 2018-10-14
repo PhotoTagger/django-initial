@@ -38,7 +38,7 @@ Ex: `git commit -m "Add: Added API to urls.py"`
 Installing dependencies that were added to the environment.yml file
 ```
 conda env update environment.yml
-conda activate photoTaggerEnv
+conda activate photoTaggerEnv or source activate photoTaggerEnv
 ```
 Viewing current dependencies installed within an environment
 `conda list`
