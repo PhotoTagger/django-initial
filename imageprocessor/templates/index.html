@@ -2,11 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Photo Tagger</title>
+    <style>
+        h2 {border:20px;}
+        a {display: block; border: 20px;}
+    </style>
 </head>
 <body>
-<a href = '{% url 'classify' %}'>Click here to access Image classifier</a>
-<br>
-<a href = '{% url 'tagsearch' %}'>Click here to access tag searcher</a>
+    <div>
+        <h2>Photo Tagger</h2>
+        <a href = '{% url 'classify' %}'>Click here to access Image classifier</a>
+        <a href = '{% url 'tagsearch' %}'>Click here to access tag searcher</a>
+    </div>
 </body>
 </html>
