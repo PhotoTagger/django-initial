@@ -1,0 +1,26 @@
+language: python
+python:
+  - "3.6"
+install:
+- wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
+- bash miniconda.sh -b -p $HOME/miniconda
+- export PATH="$HOME/miniconda/bin:$PATH"
+- hash -r
+- conda config --set always_yes yes --set changeps1 no
+- conda update --quiet conda
+
+# useful for debugging
+- conda info --add
+
+# Set the priority of channels
+- conda config --add channels conda-forge
+- conda config --add channels defaults
+
+# create conda environment
+- conda create --quiet --name test-env django numpy pillow tensorflow
+
+# activate the environment
+- source activate test-env
+script:
+#  run tests
+  - python manage.py test
