@@ -15,9 +15,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from imageprocessor.views import index
+from imageprocessor.views import classify, index, tagsearch, tagged_pictures
 
 urlpatterns = [
+    path('', index, name='index'),
     path('admin/', admin.site.urls),
-    path('', index, name='index')
+    path('tagsearch/', tagsearch, name = 'tagsearch'),
+    path('tagsearch/tagged_pictures/', tagged_pictures, name = 'tagsearch/tagged_pictures'),
+    path('classify/', classify, name='classify')
 ]
