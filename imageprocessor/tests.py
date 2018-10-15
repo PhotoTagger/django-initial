@@ -22,7 +22,7 @@ class ViewTests(TestCase):
         response = client.get("/tagsearch/")
         self.assertTrue(response.status_code == 200)
 
-    def tag_search_test(self):
+    def tag_search__tagged_pictures_test(self):
         client = Client()
         response = client.get("/tagsearch/tagged_pictures/")
         self.assertTrue(response.status_code == 200)
