@@ -8,6 +8,8 @@ from imageprocessor.tagservice.tagger import detect
 # Create your views here.
 def index(request):
 	return render(request, 'index.html')
+
+
 def classify(request):
 	context = {}
 	if request.method =='POST':

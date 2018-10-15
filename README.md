@@ -48,3 +48,15 @@ Viewing current dependencies installed within an environment
 Instead of doing a `conda install <package>` 
 you should manually add it to the environment.yml file and
 then follow the instructions above to perform a conda update
+
+### Testing
+
+Unit tests for this module only can be run using this command from the project root /django-initial:
+```bash
+python manage.py test imageprocessor.tagservice
+```
+
+This module's tests will also be included automatically as part of overally django test suite by running this command from the project root /django-initial:
+```bash
+python manage.py test
+```
