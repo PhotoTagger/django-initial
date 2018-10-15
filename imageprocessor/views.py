@@ -10,9 +10,17 @@ def index(request):
 	return render(request, 'index.html')
 
 
+def tag_search(request):
+	return render(request, 'tagsearch.html')
+
+
+def tagged_pictures(request):
+	return render(request, 'tagged_pictures.html')
+
+
 def classify(request):
 	context = {}
-	if request.method =='POST':
+	if request.method == 'POST':
 		image = Image.open(request.FILES.get('file'))
 		context['tags'] = detect(image)
 		return render(request, 'output.html', context)

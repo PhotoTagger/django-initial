@@ -7,14 +7,24 @@ class ViewTests(TestCase):
         self.assertTrue(True)
 
     def test_index_view(self):
-        print("running view tests")
         client = Client()
         response = client.get("/")
         self.assertTrue(response.status_code == 200)
 
     def test_classify_view(self):
-        print("running test for classify view")
         client = Client()
         response = client.get("/classify/")
         print(response.content)
         self.assertTrue(response.status_code == 200)
+
+    def tag_search_test(self):
+        client = Client()
+        response = client.get("/tagsearch/")
+        self.assertTrue(response.status_code == 200)
+
+    def tag_search_test(self):
+        client = Client()
+        response = client.get("/tagsearch/tagged_pictures/")
+        self.assertTrue(response.status_code == 200)
+
+
