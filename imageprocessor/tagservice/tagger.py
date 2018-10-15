@@ -97,13 +97,23 @@ def detect(user_image: Image):
   
     return tags
 
-def get_files_from_test_images_folder():
+def get_names_from_test_dir():
+    # gets the name of every file in the test_images directory
     test_image_files = [f for f in os.listdir('test_images') if os.path.isfile(os.path.join('test_images', f))]
     return test_image_files
 
+
+def open_image(file_name):
+    try:
+        loaded_image = Image.open(os.path.join('test_images', file_name))
+        print("Successfully loaded image: {}".format(file_name))
+        return loaded_image
+    except IOError:
+        print("Failed to load image: {}".format(file_name))
+
+
 if __name__ == "__main__":
-    # Get the file name for every image in the test_images folder
-    list_of_test_image_names = get_files_from_test_images_folder()
+    image_file_names = get_names_from_test_dir()
 
     _PATH_TO_FROZEN_GRAPH = os.path.join('tfmodels', _MODEL_NAME, 'frozen_inference_graph.pb')
     _PATH_TO_LABELS = os.path.join('tfmodels', _MODEL_NAME, _LABEL_MAP_NAME)
@@ -117,9 +127,8 @@ if __name__ == "__main__":
     print("Successfully initialized TF Session" if _session else "Failed to initializ TF Session")
 
     # load images and perform detection
-    for image_name in list_of_test_image_names:
-        image = Image.open(os.path.join('test_images', image_name))
-        print("Successfully loaded image " + image_name if image else "Failed to load image " + image_name)
+    for image_name in image_file_names:
+        image = open_image(image_name)
 
         list_of_tags = ', '.join(map(str, detect(image)))
         print('Detection Complete for {}:\n[{}] \n'.format(image_name, list_of_tags))

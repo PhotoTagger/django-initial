@@ -36,8 +36,7 @@ class TaggerTests(TestCase):
         self.assertTrue("cat" in tags)
 
     def test_detection_for_every_image(self):
-        # Get the file name for every image in the test_images folder
-        test_image_names = get_every_image_name_in_dir()
+        test_image_names = get_every_file_name_in_dir()
 
         # load images and perform detection
         for image_name in test_image_names:
@@ -65,6 +64,6 @@ def pretty_print_tags(str_list):
     return "[" + list_of_tags + "]"
 
 
-def get_every_image_name_in_dir():
+def get_every_file_name_in_dir():
     test_image_names = [f for f in os.listdir(TEST_IMAGES_DIR) if os.path.isfile(os.path.join(TEST_IMAGES_DIR, f))]
     return test_image_names
