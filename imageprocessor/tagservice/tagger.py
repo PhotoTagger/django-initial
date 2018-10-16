@@ -67,20 +67,20 @@ def _get_class_name(class_num: int):
     return _category_index[class_num]['name']
 
 # performs the actual detection
-def detect(image: Image):
+def detect(user_image: Image):
     """Runs object detection to return a list of the objects in a given image
     
     Arguments:
-        image {Image} -- Pillow Image Class
+        user_image {Image} -- Pillow Image Class
     
     Returns:
         list -- List of string tags
     """
 
     # Expand dimensions since the model expects images to have shape: [1, None, None, 3]
-    image_expanded = np.expand_dims(image, axis=0)
+    image_expanded = np.expand_dims(user_image, axis=0)
     # Actually perform the detection and stores them as multidimensional tensors
-    (boxes, scores, classes, num_dectections) = _session.run(
+    (boxes, scores, classes, num_detections) = _session.run(
         [_boxes_tensor, _scores_tensor, _classes_tensor, _num_detections_tensor],
         feed_dict={_image_tensor: image_expanded})
 
@@ -88,19 +88,32 @@ def detect(image: Image):
     #boxes = np.squeeze(boxes)
     scores = np.squeeze(scores)
     classes = np.squeeze(classes).astype(np.int32)
-    num_dectections = np.squeeze(num_dectections).astype(np.int32)
+    num_detections = np.squeeze(num_detections).astype(np.int32)
 
     tags = []
-    for i in range(0, num_dectections):
+    for i in range(0, num_detections):
         if scores[i] >= _THRESHOLD:
             tags.append(_get_class_name(classes[i]))
   
     return tags
 
+def get_names_from_test_dir():
+    # gets the name of every file in the test_images directory
+    test_image_files = [f for f in os.listdir('test_images') if os.path.isfile(os.path.join('test_images', f))]
+    return test_image_files
+
+
+def open_image(file_name):
+    try:
+        loaded_image = Image.open(os.path.join('test_images', file_name))
+        print("Successfully loaded image: {}".format(file_name))
+        return loaded_image
+    except IOError:
+        print("Failed to load image: {}".format(file_name))
+
 
 if __name__ == "__main__":
-    # Get the file name for every image in the test_images folder
-    TEST_IMAGE_NAMES = [f for f in os.listdir('test_images') if os.path.isfile(os.path.join('test_images', f))]
+    image_file_names = get_names_from_test_dir()
 
     _PATH_TO_FROZEN_GRAPH = os.path.join('tfmodels', _MODEL_NAME, 'frozen_inference_graph.pb')
     _PATH_TO_LABELS = os.path.join('tfmodels', _MODEL_NAME, _LABEL_MAP_NAME)
@@ -114,14 +127,13 @@ if __name__ == "__main__":
     print("Successfully initialized TF Session" if _session else "Failed to initializ TF Session")
 
     # load images and perform detection
-    for image_name in TEST_IMAGE_NAMES:
-        image = Image.open(os.path.join('test_images', image_name))
-        print("Successfully loaded image " + image_name if image else "Failed to load image " + image_name)
+    for image_name in image_file_names:
+        image = open_image(image_name)
 
         list_of_tags = ', '.join(map(str, detect(image)))
         print('Detection Complete for {}:\n[{}] \n'.format(image_name, list_of_tags))
 else:
-    # initalization sequence runs upon being imported
+    # initialization sequence runs upon being imported
     _load_model()
     _load_labels()
     _load_session()

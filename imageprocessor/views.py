@@ -10,7 +10,7 @@ def index(request):
 	return render(request, 'index.html')
 
 
-def tag_search(request):
+def tagsearch(request):
 	return render(request, 'tagsearch.html')
 
 
