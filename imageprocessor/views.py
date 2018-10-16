@@ -20,10 +20,15 @@ def tagged_pictures(request):
 
 def classify(request):
 	context = {}
-	if request.method =='POST':
-		image = Image.open(request.FILES.get('file'))
-		context['tags'] = detect(image)
-		return render(request, 'output.html', context)
 	form = ImageForm(request.POST or None)
+	if request.method == 'POST':
+		try:
+			image_file = request.FILES.get('file')
+			image = Image.open(image_file)
+			context['tags'] = detect(image)
+			return render(request, 'output.html', context)
+		except OSError as err:
+			context['form'] = form
+			return render(request, 'input.html', context)
 	context['form'] = form
 	return render(request, 'input.html', context)
