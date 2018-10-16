@@ -10,6 +10,14 @@ def index(request):
 	return render(request, 'index.html')
 
 
+def tagsearch(request):
+	return render(request, 'tagsearch.html')
+
+
+def tagged_pictures(request):
+	return render(request, 'tagged_pictures.html')
+
+
 def classify(request):
 	context = {}
 	if request.method =='POST':
