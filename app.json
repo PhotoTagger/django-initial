@@ -11,10 +11,5 @@
   },
   "addons": [
     "heroku-postgresql"
-  ],
-  "buildpacks": [
-    {
-      "url": "https://github.com/conda/conda-buildpack.git"
-    }
   ]
 }
