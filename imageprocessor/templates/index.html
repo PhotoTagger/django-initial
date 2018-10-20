@@ -1,5 +1,18 @@
-<form action="" method="post"  enctype='multipart/form-data'>
-    {% csrf_token %}
-    {{ form }}
-    <input type="submit" value="Submit">
-</form>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Photo Tagger</title>
+    <style>
+        h2 {border:20px;}
+        a {display: block; border: 20px;}
+    </style>
+</head>
+<body>
+    <div>
+        <h2>Photo Tagger</h2>
+        <a href = '{% url 'classify' %}'>Click here to access Image classifier</a>
+        <a href = '{% url 'tagsearch' %}'>Click here to access tag searcher</a>
+    </div>
+</body>
+</html>
