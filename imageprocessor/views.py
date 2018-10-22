@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth.forms import UserCreationForm
-from imageprocessor.forms import ImageForm, UserForm
+from imageprocessor.forms import ImageForm
 from PIL import Image
 from imageprocessor.tagservice.tagger import detect
 

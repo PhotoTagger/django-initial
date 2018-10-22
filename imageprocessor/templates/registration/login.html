@@ -1,0 +1,22 @@
+{% load crispy_forms_tags %}
+
+<div class ="row">
+    <div class = "col-sm-3 col-sm-offset-4">
+<div class="panel panel-primary login">
+  <div class="panel-heading">
+
+  <h2>Login</h2>
+  </div>
+<div class="panel-body">
+  <form method="post">
+    {% csrf_token %}
+    {{ form | crispy }}
+    <div class="col-sm-12 text-center">
+    <button id="submit" class="btn btn-primary btn-lg" type="submit">Submit</button>
+  </form>
+  </div>
+  <br>  <br> <br>
+  <p><a href="{% url 'password_reset' %}">Lost password?</a></p>
+  </div>
+  </div>
+</div>
