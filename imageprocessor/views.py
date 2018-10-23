@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from imageprocessor.forms import ImageForm
 from PIL import Image
 from imageprocessor.tagservice.tagger import detect
-
+from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
 def index(request):
@@ -17,7 +17,7 @@ def tag_search(request):
 def tagged_pictures(request):
 	return render(request, 'tagged_pictures.html')
 
-
+@csrf_exempt
 def classify(request):
 	context = {}
 	form = ImageForm(request.POST or None)
