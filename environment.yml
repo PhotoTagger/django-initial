@@ -8,3 +8,5 @@ dependencies:
   - pillow=5.3.0
   - python=3.6.6
   - tensorflow=1.10
+  - pip:
+    - django-crispy-forms==1.7.2
