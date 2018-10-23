@@ -25,7 +25,7 @@ SECRET_KEY = 'uzw$to=oz2l9$-ss+t7s71tol0x$l)x+)y$8&d0t9%pb156o25'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['phototagger491.herokuapp.com', 'localhost']
+ALLOWED_HOSTS = ['phototagger491.herokuapp.com', 'localhost', '127.0.0.1']
 
 
 # Application definition
