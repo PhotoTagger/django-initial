@@ -17,7 +17,7 @@ install:
 - conda config --add channels defaults
 
 # create conda environment
-- conda create --quiet --name test-env django numpy pillow tensorflow
+- conda create --quiet --name test-env django numpy pillow tensorflow django-crispy-forms
 
 # activate the environment
 - source activate test-env
