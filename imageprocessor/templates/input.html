@@ -1,3 +1,6 @@
+{% if errors %}
+   <p>We're sorry, but we couldn't process your image, please try a different file</p>
+{% endif %}
 <form action="" method="post" enctype='multipart/form-data'>
     {% csrf_token %}
     {{ form }}

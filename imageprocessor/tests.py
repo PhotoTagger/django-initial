@@ -14,7 +14,6 @@ class ViewTests(TestCase):
     def test_classify_view(self):
         client = Client()
         response = client.get("/classify/")
-        print(response.content)
         self.assertTrue(response.status_code == 200)
 
     def tag_search_test(self):

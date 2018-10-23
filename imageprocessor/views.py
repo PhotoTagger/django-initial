@@ -1,3 +1,5 @@
+from builtins import OSError, ValueError
+
 from django.shortcuts import render
 from django.http import HttpResponse
 from imageprocessor.forms import ImageForm
@@ -27,8 +29,9 @@ def classify(request):
 			image = Image.open(image_file)
 			context['tags'] = detect(image)
 			return render(request, 'output.html', context)
-		except OSError as err:
-			context['form'] = form
-			return render(request, 'input.html', context)
+		except ValueError:
+			context['errors'] = True
+		except OSError:
+			context['errors'] = True
 	context['form'] = form
 	return render(request, 'input.html', context)
