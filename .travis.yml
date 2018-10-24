@@ -12,10 +12,6 @@ install:
 # useful for debugging
 - conda info -a
 
-# Set the priority of channels
-- conda config --add channels conda-forge
-- conda config --add channels defaults
-
 # create conda environment
 - conda env create --quiet --name test-env -f=./environment.yml
 
@@ -28,4 +24,7 @@ notifications:
     
 script:
 #  run tests
-  - python manage.py test
+  - coverage run --source='.' manage.py test
+
+after_success:
+- coveralls
