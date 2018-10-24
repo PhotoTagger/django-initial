@@ -5,10 +5,12 @@ from django.http import HttpResponse
 from imageprocessor.forms import ImageForm
 from PIL import Image
 from imageprocessor.tagservice.tagger import detect
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
 
 NO_TAGS_ERROR_MSG = "We couldn't generate tags for that image. Please try a different photo"
 BAD_FILE_ERROR_MSG = "We can't process that file type. Please submit a different file"
+
 
 # Create your views here.
 def index(request):
@@ -23,6 +25,7 @@ def tagged_pictures(request):
 	return render(request, 'tagged_pictures.html')
 
 
+@csrf_exempt
 def classify(request):
 	context = {}
 	form = ImageForm(request.POST or None)
