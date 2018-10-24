@@ -1,4 +1,5 @@
 # Photo Tagger - A Django Tensor Flow Project
+[![Build Status](https://travis-ci.org/PhotoTagger/django-initial.svg?branch=master)](https://travis-ci.org/PhotoTagger/django-initial)
 
 This project is based off of the following tutorial and base template
 https://docs.djangoproject.com/en/2.1/intro/tutorial01/
@@ -48,3 +49,15 @@ Viewing current dependencies installed within an environment
 Instead of doing a `conda install <package>` 
 you should manually add it to the environment.yml file and
 then follow the instructions above to perform a conda update
+
+### Testing
+
+Unit tests for this module only can be run using this command from the project root /django-initial:
+```bash
+python manage.py test imageprocessor.tagservice
+```
+
+This module's tests will also be included automatically as part of overally django test suite by running this command from the project root /django-initial:
+```bash
+python manage.py test
+```
