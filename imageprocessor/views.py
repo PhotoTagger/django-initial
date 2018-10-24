@@ -34,9 +34,7 @@ def classify(request):
 			return render(request, 'output.html', context)
 		except ValueError:
 			messages.add_message(request, messages.ERROR, NO_TAGS_ERROR_MSG)
-			context['errors'] = True
 		except OSError:
 			messages.add_message(request, messages.ERROR, BAD_FILE_ERROR_MSG)
-			context['errors'] = True
 	context['form'] = form
 	return render(request, 'input.html', context)
