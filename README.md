@@ -1,5 +1,5 @@
 # Photo Tagger - A Django Tensor Flow Project
-[![Build Status](https://travis-ci.org/PhotoTagger/django-initial.svg?branch=master)](https://travis-ci.org/PhotoTagger/django-initial)
+[![Build Status](https://travis-ci.org/PhotoTagger/django-initial.svg?branch=master)](https://travis-ci.org/PhotoTagger/django-initial) [![Coverage Status](https://coveralls.io/repos/github/PhotoTagger/django-initial/badge.svg?branch=master)](https://coveralls.io/github/PhotoTagger/django-initial?branch=master)
 
 This project is based off of the following tutorial and base template
 https://docs.djangoproject.com/en/2.1/intro/tutorial01/
