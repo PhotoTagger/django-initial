@@ -1,1 +1,1 @@
-web: gunicorn CatalogueRaisonne.wsgi --log-file -
+web: gunicorn CatalogueRaisonne.wsgi --preload --max-requests 20 --log-file -
