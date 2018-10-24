@@ -1,5 +1,17 @@
-{% if errors %}
-   <p>We're sorry, but we couldn't process your image, please try a different file</p>
+<style>
+    .error {
+        list-style-type: none;
+        padding: 0;
+        font-size: 18px;
+        font-weight: bold;
+    }
+</style>
+{% if messages %}
+<ul class="messages error">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
 {% endif %}
 <form action="" method="post" enctype='multipart/form-data'>
     {% csrf_token %}

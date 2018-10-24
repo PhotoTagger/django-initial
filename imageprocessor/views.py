@@ -5,7 +5,10 @@ from django.http import HttpResponse
 from imageprocessor.forms import ImageForm
 from PIL import Image
 from imageprocessor.tagservice.tagger import detect
+from django.contrib import messages
 
+NO_TAGS_ERROR_MSG = "We couldn't generate tags for that image. Please try a different photo"
+BAD_FILE_ERROR_MSG = "We can't process that file type. Please submit a different file"
 
 # Create your views here.
 def index(request):
@@ -30,8 +33,10 @@ def classify(request):
 			context['tags'] = detect(image)
 			return render(request, 'output.html', context)
 		except ValueError:
+			messages.add_message(request, messages.ERROR, NO_TAGS_ERROR_MSG)
 			context['errors'] = True
 		except OSError:
+			messages.add_message(request, messages.ERROR, BAD_FILE_ERROR_MSG)
 			context['errors'] = True
 	context['form'] = form
 	return render(request, 'input.html', context)
