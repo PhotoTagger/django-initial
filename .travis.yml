@@ -18,6 +18,9 @@ install:
 # activate the environment
 - source activate test-env
 
+# install codecov
+- pip install codecov
+
 # build notifications
 notifications:
     slack: se491-fall2018:ccqfPhe1cEHeZJlQgCOe3m8C
@@ -28,3 +31,4 @@ script:
 
 after_success:
 - coveralls
+- codecov
