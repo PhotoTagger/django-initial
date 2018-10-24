@@ -52,12 +52,17 @@ then follow the instructions above to perform a conda update
 
 ### Testing
 
-Unit tests for this module only can be run using this command from the project root /django-initial:
+Unit tests for a specific module only can be run using this command from the project root /django-initial:
 ```bash
-python manage.py test imageprocessor.tagservice
+coverage run --source='.' manage.py test imageprocessor.tagservice
 ```
 
-This module's tests will also be included automatically as part of overally django test suite by running this command from the project root /django-initial:
+This module's tests will also be included automatically as part of overall django test suite by running this command from the project root /django-initial:
 ```bash
-python manage.py test
+coverage run --source='.' manage.py test
+```
+
+You can then view the the code coverage report running this command from the project root /django-initial:
+```bash
+coverage report -m
 ```
