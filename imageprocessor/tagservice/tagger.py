@@ -1,3 +1,5 @@
+from builtins import ValueError
+
 import os
 import numpy as np
 import tensorflow as tf
@@ -94,8 +96,12 @@ def detect(user_image: Image):
     for i in range(0, num_detections):
         if scores[i] >= _THRESHOLD:
             tags.append(_get_class_name(classes[i]))
-  
-    return tags
+
+    if not tags:
+        raise ValueError("Could not produce tags for image, please try a different image")
+    else:
+        return tags
+
 
 def get_names_from_test_dir():
     # gets the name of every file in the test_images directory
