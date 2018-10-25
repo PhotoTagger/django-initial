@@ -19,15 +19,15 @@ BAD_FILE_ERROR_MSG = "We can't process that file type. Please submit a different
 
 # Create your views here.
 def index(request):
-	return render(request, 'index.html')
+    return render(request, 'index.html')
 
 
 def tag_search(request):
-	return render(request, 'tagsearch.html')
+    return render(request, 'tagsearch.html')
 
 
 def tagged_pictures(request):
-	return render(request, 'tagged_pictures.html')
+    return render(request, 'tagged_pictures.html')
 
 
 @csrf_exempt
@@ -64,6 +64,6 @@ def register(request):
         except:
             messages.add_message(request, messages.ERROR, "user not added ")
         return HttpResponseRedirect(reverse('login'))
-	context['form'] = form
-	return render(request, 'register.html', context)
+    context['form'] = form
+    return render(request, 'register.html', context)
 
