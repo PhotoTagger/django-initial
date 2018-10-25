@@ -1,4 +1,5 @@
 # Photo Tagger - A Django Tensor Flow Project
+[![Build Status](https://travis-ci.org/PhotoTagger/django-initial.svg?branch=master)](https://travis-ci.org/PhotoTagger/django-initial)
 
 This project is based off of the following tutorial and base template
 https://docs.djangoproject.com/en/2.1/intro/tutorial01/
@@ -16,6 +17,7 @@ git clone https://github.com/PhotoTagger/django-initial.git
 cd django-initial
 conda env create -n photoTaggerEnv -f=./environment.yml
 source activate photoTaggerEnv
+python manage.py migrate
 python manage.py runserver
 ```
 
