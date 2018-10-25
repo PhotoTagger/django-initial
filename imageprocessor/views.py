@@ -32,31 +32,38 @@ def tagged_pictures(request):
 
 @csrf_exempt
 def classify(request):
-	context = {}
-	form = ImageForm(request.POST or None, request.FILES or None)
-	if request.method == 'POST':
-		try:
-			image_file = request.FILES['file']
-			image = Image.open(image_file)
-			context['tags'] = detect(image)
-			new_image = form.save()
-			new_image.save()
-			context['new_image'] = new_image
-			return render(request, 'output.html', context)
-		except ValueError:
-			messages.add_message(request, messages.ERROR, NO_TAGS_ERROR_MSG)
-		except OSError:
-			messages.add_message(request, messages.ERROR, BAD_FILE_ERROR_MSG)
-	context['form'] = form
-	return render(request, 'input.html', context)
+    context = {}
+    form = ImageForm(request.POST or None, request.FILES or None)
+    if request.method == 'POST':
+        try:
+            image_file = request.FILES['file']
+            image = Image.open(image_file)
+            context['tags'] = detect(image)
+            #this try except was added so application works while the database is not working.
+            try:
+                new_image = form.save()
+                new_image.save()
+                context['new_image'] = new_image
+            except:
+                messages.add_message(request, messages.ERROR, "image not saved")
+            return render(request, 'output.html', context)
+        except ValueError:
+            messages.add_message(request, messages.ERROR, NO_TAGS_ERROR_MSG)
+        except OSError:
+            messages.add_message(request, messages.ERROR, BAD_FILE_ERROR_MSG)
+    context['form'] = form
+    return render(request, 'input.html', context)
 
 def register(request):
-	context = {}
-	form = UserCreationForm(request.POST or None)
-	if request.method == 'POST':
-		new_user = form.save()
-		new_user.save()
-		return HttpResponseRedirect(reverse('login'))
+    context = {}
+    form = UserCreationForm(request.POST or None)
+    if request.method == 'POST':
+        try:
+            new_user = form.save()
+            new_user.save()
+        except:
+            messages.add_message(request, messages.ERROR, "user not added ")
+        return HttpResponseRedirect(reverse('login'))
 	context['form'] = form
 	return render(request, 'register.html', context)
 
