@@ -1,5 +1,6 @@
-from django.test import TestCase
+from django.test import TestCase, Client
 from PIL import Image
+from django.urls import reverse
 import os
 
 from .tagger import detect
@@ -47,7 +48,11 @@ class TaggerTests(TestCase):
             print('Detection Complete for {}:\ntags:{}\n'.format(image_name, pretty_print_tags(tags)))
 
             self.assertTrue(len(tags) >= 1)
-
+    def test_results_page_shows_image(self):
+        client = Client()
+        with open(TEST_IMAGES_DIR + "/image1.jpg", "rb") as file:
+            response = client.post(reverse('classify'), { 'file' : file})
+        self.assertIsNotNone(response.context['new_image'])
 
 # Helper Functions
 def open_image(image_name):

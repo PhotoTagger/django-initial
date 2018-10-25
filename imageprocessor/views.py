@@ -1,7 +1,12 @@
 from builtins import OSError, ValueError
 
 from django.shortcuts import render
+from base64 import b64encode
+from .models import UploadedImage
 from django.http import HttpResponse
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+from django.contrib.auth.forms import UserCreationForm
 from imageprocessor.forms import ImageForm
 from PIL import Image
 from imageprocessor.tagservice.tagger import detect
@@ -28,12 +33,15 @@ def tagged_pictures(request):
 @csrf_exempt
 def classify(request):
 	context = {}
-	form = ImageForm(request.POST or None)
+	form = ImageForm(request.POST or None, request.FILES or None)
 	if request.method == 'POST':
 		try:
-			image_file = request.FILES.get('file')
+			image_file = request.FILES['file']
 			image = Image.open(image_file)
 			context['tags'] = detect(image)
+			new_image = form.save()
+			new_image.save()
+			context['new_image'] = new_image
 			return render(request, 'output.html', context)
 		except ValueError:
 			messages.add_message(request, messages.ERROR, NO_TAGS_ERROR_MSG)
@@ -41,3 +49,14 @@ def classify(request):
 			messages.add_message(request, messages.ERROR, BAD_FILE_ERROR_MSG)
 	context['form'] = form
 	return render(request, 'input.html', context)
+
+def register(request):
+	context = {}
+	form = UserCreationForm(request.POST or None)
+	if request.method == 'POST':
+		new_user = form.save()
+		new_user.save()
+		return HttpResponseRedirect(reverse('login'))
+	context['form'] = form
+	return render(request, 'register.html', context)
+

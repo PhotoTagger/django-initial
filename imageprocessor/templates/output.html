@@ -1,5 +1,8 @@
+<p>Objects likely in image</p>
 {% csrf_token %}
-<h2>Photo Tagger</h2>
+<p>
+<img src="{{ new_image.file.url }}" alt="" width="100%" height="100%">
+</p>
 <p>
 {{ tags }}
 </p>

@@ -17,6 +17,7 @@ git clone https://github.com/PhotoTagger/django-initial.git
 cd django-initial
 conda env create -n photoTaggerEnv -f=./environment.yml
 source activate photoTaggerEnv
+python manage.py migrate
 python manage.py runserver
 ```
 

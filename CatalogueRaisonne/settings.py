@@ -25,7 +25,9 @@ SECRET_KEY = 'uzw$to=oz2l9$-ss+t7s71tol0x$l)x+)y$8&d0t9%pb156o25'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['phototagger491.herokuapp.com', 'phototagger491-pr.herokuapp.com']
+
+ALLOWED_HOSTS = ['phototagger491.herokuapp.com', 'localhost', '127.0.0.1']
+
 
 
 # Scout settings
@@ -43,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 	
 	'imageprocessor',
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [
@@ -125,3 +128,7 @@ USE_TZ = True
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'media')
+
+LOGIN_REDIRECT_URL = '/'
