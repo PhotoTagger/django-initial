@@ -1,5 +1,5 @@
 # Photo Tagger - A Django Tensor Flow Project
-[![Build Status](https://travis-ci.org/PhotoTagger/django-initial.svg?branch=master)](https://travis-ci.org/PhotoTagger/django-initial)
+[![Build Status](https://travis-ci.org/PhotoTagger/django-initial.svg?branch=master)](https://travis-ci.org/PhotoTagger/django-initial) [![Coverage Status](https://coveralls.io/repos/github/PhotoTagger/django-initial/badge.svg?branch=master)](https://coveralls.io/github/PhotoTagger/django-initial?branch=master) [![codecov](https://codecov.io/gh/PhotoTagger/django-initial/branch/master/graph/badge.svg)](https://codecov.io/gh/PhotoTagger/django-initial)
 
 This project is based off of the following tutorial and base template
 https://docs.djangoproject.com/en/2.1/intro/tutorial01/
@@ -53,12 +53,17 @@ then follow the instructions above to perform a conda update
 
 ### Testing
 
-Unit tests for this module only can be run using this command from the project root /django-initial:
+Unit tests for a specific module only can be run using this command from the project root /django-initial:
 ```bash
-python manage.py test imageprocessor.tagservice
+coverage run --source='.' manage.py test imageprocessor.tagservice
 ```
 
-This module's tests will also be included automatically as part of overally django test suite by running this command from the project root /django-initial:
+This module's tests will also be included automatically as part of overall django test suite by running this command from the project root /django-initial:
 ```bash
-python manage.py test
+coverage run --source='.' manage.py test
+```
+
+You can then view the the code coverage report running this command from the project root /django-initial:
+```bash
+coverage report -m
 ```
