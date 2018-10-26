@@ -40,30 +40,32 @@ def get_tags_for_images(request):
     return tags
 
 
+def save_image(request):
+    form = ImageForm(request.POST or None, request.FILES or None)
+    # this try except was added so application works while the database is not working.
+    try:
+        if form.is_valid():
+            new_image = form.save()
+            new_image.save()
+            return new_image
+    except:
+        messages.add_message(request, messages.ERROR, "image not saved")
+
 @csrf_exempt
 def classify(request):
-    context = {}
     form = ImageForm(request.POST or None, request.FILES or None)
+    context = {"form": form}
     if request.method == 'POST':
         try:
             context['tags'] = get_tags_for_images(request)
-            try:
-                # this try except was added so application works while the database is not working.
-                new_image = form.save()
-                new_image.save()
-                context['new_image'] = new_image
-            except:
-                messages.add_message(request, messages.ERROR, "image not saved")
+            context['new_image'] = save_image(request)
         except ValueError:
             messages.add_message(request, messages.ERROR, NO_TAGS_ERROR_MSG)
-            context['form'] = form
             return render(request, 'input.html', context)
         except OSError:
             messages.add_message(request, messages.ERROR, BAD_FILE_ERROR_MSG)
-            context['form'] = form
             return render(request, 'input.html', context)
         return render(request, 'output.html', context)
-    context['form'] = form
     return render(request, 'input.html', context)
 
 

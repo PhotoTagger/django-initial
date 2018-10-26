@@ -1,6 +1,7 @@
 from django import forms
 from .models import UploadedImage
 
+
 class ImageForm(forms.ModelForm):
     file = forms.FileField()
 
