@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html>
 <body>
-<form action="tagged_pictures/">
-	
+<form action = "" method="post">
+	{% csrf_token %}
 	Please enter the tag you want to search: <br>
 	<input type="text" name="tagsearch">
 	<br><br>
 	<input type="submit" name = "submit" value="submit">
 </form>
 <p> Once you type in a tag and click submit, pictures that match the tag will appear. </p>
+<p>
+	<a href = '{% url 'index' %}'>Back to Home Page</a>
+</p>
 </body>
 </html>
