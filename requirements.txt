@@ -16,6 +16,7 @@ matplotlib==3.0.0
 numpy==1.15.2
 Pillow==5.2.0
 protobuf==3.6.1
+psycopg2==2.7.5
 pyparsing==2.2.2
 python-dateutil==2.7.3
 pytz==2018.5
