@@ -17,14 +17,18 @@ class ViewTests(TestCase):
         response = client.get("/classify/")
         self.assertTrue(response.status_code == 200)
 
-    def tag_search_test(self):
+    def test_tag_search(self):
         client = Client()
         response = client.get("/tagsearch/")
         self.assertTrue(response.status_code == 200)
 
-    def tag_search__tagged_pictures_test(self):
+    def test_tag_search__tagged_pictures(self):
         client = Client()
         response = client.get("/tagsearch/tagged_pictures/")
+        self.assertTrue(response.status_code == 200)
+    def test_register_page(self):
+        client = Client()
+        response = client.get(reverse('register'))
         self.assertTrue(response.status_code == 200)
 
 class LoginTests(TestCase):
