@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from imageprocessor.views import classify, index, tag_search, tagged_pictures, register
+from imageprocessor.views import classify, index, tag_search, tagged_pictures, register, ClassifyAPI
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import urls
@@ -27,5 +27,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('tagsearch/', tag_search, name = 'tagsearch'),
     path('tagsearch/tagged_pictures/', tagged_pictures, name = 'tagsearch/tagged_pictures'),
-    path('classify/', classify, name='classify')
+    path('classify/', classify, name='classify'),
+    path('api/classify/', ClassifyAPI.as_view()),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

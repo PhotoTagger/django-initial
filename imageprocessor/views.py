@@ -12,6 +12,9 @@ from PIL import Image
 from imageprocessor.tagservice.tagger import detect
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
 
 NO_TAGS_ERROR_MSG = "We couldn't generate tags for that image. Please try a different photo"
 BAD_FILE_ERROR_MSG = "We can't process that file type. Please submit a different file"
@@ -108,3 +111,22 @@ def register(request):
     context['form'] = form
     return render(request, 'register.html', context)
 
+class ClassifyAPI(APIView):
+
+    def post(self, request, format=None):           
+        try:
+            image_file = request.FILES['file']
+            image = Image.open(image_file)
+            tags = detect(image)
+            #this try except was added so application works while the database is not working.
+            try:
+                new_image = form.save()
+                new_image.save()
+                context['new_image'] = new_image
+            except:
+                return Response(tags, status=status.HTTP_202_ACCEPTED)
+            return Response(tags, status=status.HTTP_200_OK)
+        except ValueError as e:
+            return Response(NO_TAGS_ERROR_MSG, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except OSError as e:
+            return Response(BAD_FILE_ERROR_MSG, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
