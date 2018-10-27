@@ -42,6 +42,7 @@ def tagged_pictures(request, context):
 def classify(request):
     context = {}
     form = ImageForm(request.POST or None, request.FILES or None)
+    form2 = ImageForm(request.POST or None, request.FILES or None)
     if request.method == 'POST':
         try:
             multi_list = ['','1','2','3','4']
@@ -55,6 +56,7 @@ def classify(request):
                 image.append(Image.open(img_file))
             for img in image:
                 tags_found.append(detect(img))
+
             '''
             image_file = request.FILES['file']
             image = Image.open(image_file)
