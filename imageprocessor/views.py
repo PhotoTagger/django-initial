@@ -42,50 +42,32 @@ def tagged_pictures(request, context):
 def classify(request):
     context = {}
     form = ImageForm(request.POST or None, request.FILES or None)
-    form2 = ImageForm(request.POST or None, request.FILES or None)
+
     if request.method == 'POST':
         try:
-            multi_list = ['','1','2','3','4']
-            image_file =[]
-            image = []
-            tags_found = []
-            tag_string = []
-            for char in multi_list:
-                image_file.append(request.FILES['file' + char])
-            for img_file in image_file:
-                image.append(Image.open(img_file))
-            for img in image:
-                tags_found.append(detect(img))
-
-            '''
-            image_file = request.FILES['file']
-            image = Image.open(image_file)
-
-            image_file = request.FILES['file1']
-            image1 = Image.open(image_file)
-
-            image_file = request.FILES['file2']
-            image2 = Image.open(image_file)
-
-            image_file = request.FILES['file3']
-            image3 = Image.open(image_file)
-
-            image_file = request.FILES['file4']
-            image4 = Image.open(image_file)
-            '''
+            tag_string_list = []
+            pic_number = 1
+            for image_file in request.FILES.getlist('file'):
+                image = Image.open(image_file)
+                tags_found = detect(image)
+                tag_string = str(pic_number) + ': '
+                i = 0
+                while (i < len(tags_found)):
+                    if i == len(tags_found) - 1:
+                        tag_string = tag_string + tags_found[i] + '.'
+                    else:
+                        tag_string = tag_string + tags_found[i] + ', '
+                    i = i + 1
+                tag_string_list.append(tag_string)
+                pic_number = pic_number + 1
+           
             # Get the tags from the detection algorithm
-
+            
             # reconstruct a string from the list output from the above algorithm
-            '''tag_string = ''
-            for tag in tags_found:
-                tag_string = tag_string + tag + ' '
-            '''
+            
+            
             # insert reconstructed string as value associated with the 'tags' key
-            context['tags'] = tags_found[0]
-            context['tags1'] = tags_found[1]
-            context['tags2'] = tags_found[2]
-            context['tags3'] = tags_found[3]
-            context['tags4'] = tags_found[4]
+            context['tags'] = tag_string_list
             # this try except was added so application works while the database is not working.
             try:
                 new_image = form.save()
@@ -99,6 +81,7 @@ def classify(request):
         except OSError:
             messages.add_message(request, messages.ERROR, BAD_FILE_ERROR_MSG)
     context['form'] = form
+
 
     return render(request, 'input.html', context)
 
