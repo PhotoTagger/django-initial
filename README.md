@@ -45,7 +45,7 @@ conda activate photoTaggerEnv or source activate photoTaggerEnv
 Viewing current dependencies installed within an environment
 `conda list`
 
-###Sharing dependencies 
+### Sharing dependencies 
 
 Instead of doing a `conda install <package>` 
 you should manually add it to the environment.yml file and
@@ -67,3 +67,23 @@ You can then view the the code coverage report running this command from the pro
 ```bash
 coverage report -m
 ```
+
+# API
+
+### /api/classify/
+
+You can try the API by using this curl command.
+```base
+curl -F "file=@[FULL PATH TO IMAGE FILE]" http://127.0.0.1:8000/api/classify/
+```
+
+You can also try this API by using the postman app.
+1. Set the method to POST
+2. Set the url to http://127.0.0.1:8000/api/classify/
+3. On the Body tab, select form-data.
+4. Set the following:
+   * Type "file" in the key field without the quotes.
+   * Change the type from text to file.
+   * Click the Choose Files button under value and select the image you want to tag.
+   * Press the Send button
+
