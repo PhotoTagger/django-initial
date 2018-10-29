@@ -26,7 +26,7 @@ def tag_search(request):
     context = {}
     if request.method == 'POST':
         context['tag'] = request.POST["tagsearch"]
-        return tagged_pictures(request, context)
+        return render(request, 'tagged_pictures.html', context)
         # whatever is typed in, will be stored into tag_searched
         # tag_searched = request.POST["tag"]
         # context['tag'] = tag_searched
@@ -34,8 +34,8 @@ def tag_search(request):
 
 
 
-def tagged_pictures(request, context):
-    return render(request, 'tagged_pictures.html', context)
+def tagged_pictures(request):
+    return render(request, 'tagged_pictures.html')
 
 def generate_tags(request):
     tags = []
