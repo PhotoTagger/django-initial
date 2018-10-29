@@ -17,7 +17,9 @@
 <form action="" method="post" enctype='multipart/form-data'>
     {% csrf_token %}
     {{ form }}
+    <br>
     <input type="submit" value="Submit">
 </form>
 <p>
 </p>
+<a href = '{% url 'index' %}'>Back to Home Page</a>
