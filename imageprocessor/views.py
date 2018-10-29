@@ -58,12 +58,19 @@ def format_tags(tags):
 def save_image(request):
     ''' '''
     form = ImageForm(request.POST or None, request.FILES or None)
+    new_image_list = []
     # this try except was added so application works while the database is not working.
     try:
         if form.is_valid():
+            for image_file in request.FILES.getlist('file'):
+                instance = UploadedImage(file = image_file)
+                instance.save()
+                new_image_list.append(instance)
+        '''if form.is_valid():
             new_image = form.save()
             new_image.save()
-            return new_image
+            return new_image'''
+        return new_image_list
     except:
         messages.add_message(request, messages.ERROR, "image not saved")
 
