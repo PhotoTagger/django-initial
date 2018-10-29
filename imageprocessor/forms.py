@@ -1,20 +1,22 @@
 from django import forms
-from .models import UploadedImage
+# from .models import UploadedImage
 
 from cloudinary.forms import CloudinaryJsFileField, CloudinaryUnsignedJsFileField
+
 # Next two lines are only used for generating the upload preset sample name
 from cloudinary.compat import to_bytes
 import cloudinary, hashlib
 
 from .models import Photo
 
-
-class ImageForm(forms.ModelForm):
-    file = forms.FileField()
-
-    class Meta:
-        model = UploadedImage
-        fields = ['file']
+#
+# class ImageForm(forms.ModelForm):
+#     file = forms.FileField()
+#
+#     class Meta:
+#         model = UploadedImage
+#         fields = ['file']
+#
 
 
 class PhotoForm(forms.ModelForm):
@@ -23,8 +25,8 @@ class PhotoForm(forms.ModelForm):
         fields = '__all__'
 
 
-class PhotoDirectForm(PhotoForm):
-    image = CloudinaryJsFileField()
+# class PhotoDirectForm(PhotoForm):
+#     image = CloudinaryJsFileField()
 
 
 class PhotoUnsignedDirectForm(PhotoForm):

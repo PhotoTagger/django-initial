@@ -69,7 +69,7 @@ def _get_class_name(class_num: int):
     return _category_index[class_num]['name']
 
 # performs the actual detection
-def detect(user_image: Image):
+def detect(user_image):
     """Runs object detection to return a list of the objects in a given image
     
     Arguments:
@@ -79,8 +79,9 @@ def detect(user_image: Image):
         list -- List of string tags
     """
 
+    user_img = Image.open(user_image)
     # Expand dimensions since the model expects images to have shape: [1, None, None, 3]
-    image_expanded = np.expand_dims(user_image, axis=0)
+    image_expanded = np.expand_dims(user_img, axis=0)
     # Actually perform the detection and stores them as multidimensional tensors
     (boxes, scores, classes, num_detections) = _session.run(
         [_boxes_tensor, _scores_tensor, _classes_tensor, _num_detections_tensor],

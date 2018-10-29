@@ -4,8 +4,8 @@ from django.db import models
 from cloudinary.models import CloudinaryField
 
 
-class UploadedImage(models.Model):
-    file = models.FileField(upload_to="images/")
+# class UploadedImage(models.Model):
+#     file = models.FileField(upload_to="images/")
 
 """
 This is the main model in the project. It holds a reference to cloudinary-stored
