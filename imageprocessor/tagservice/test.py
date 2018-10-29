@@ -36,18 +36,28 @@ class TaggerTests(TestCase):
         self.assertTrue("dog" in tags)
         self.assertTrue("cat" in tags)
 
+    def test_error_is_raised_when_no_tags_generated(self):
+         image_name = "image4_should_error.jpg"
+         image = open_image(image_name)
+
+         with self.assertRaises(ValueError):
+             detect(image)
+
+
     def test_detection_for_every_image(self):
         test_image_names = get_every_file_name_in_dir()
 
         # load images and perform detection
         for image_name in test_image_names:
-            image = open_image(image_name)
-            self.assertIsNotNone(image, "Failed to load image")
+            if image_name != "image4_should_error.jpg":
+                image = open_image(image_name)
+                self.assertIsNotNone(image, "Failed to load image")
 
-            tags = detect(image)
-            print('Detection Complete for {}:\ntags:{}\n'.format(image_name, pretty_print_tags(tags)))
+                tags = detect(image)
+                print('Detection Complete for {}:\ntags:{}\n'.format(image_name, pretty_print_tags(tags)))
 
-            self.assertTrue(len(tags) >= 1)
+            
+                self.assertTrue(len(tags) >= 1)
     def test_results_page_shows_image(self):
         client = Client()
         with open(TEST_IMAGES_DIR + "/image1.jpg", "rb") as file:
