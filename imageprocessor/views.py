@@ -15,7 +15,6 @@ from .models import Photo
 
 NO_TAGS_ERROR_MSG = "We couldn't generate tags for that image. Please try a different photo"
 BAD_FILE_ERROR_MSG = "We can't process that file type. Please submit a different file"
-DEFAULT_TAG = "python_sample_basic"
 
 
 # Create your views here.
@@ -102,11 +101,8 @@ def classify(request):
 
     if request.method == 'POST':
         image_count = len(request.FILES.getlist('file'))
-        if image_count > 1:
-            results = process_bulk_images(request)
-        else:
-            results = process_single_image(request)
-        context['results'] = results
+        context['results'] = process_single_image(request) if image_count <= 1 else process_bulk_images(request)
+
     return render(request, 'input.html', context)
 
 

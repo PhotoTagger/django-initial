@@ -24,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'uzw$to=oz2l9$-ss+t7s71tol0x$l)x+)y$8&d0t9%pb156o25'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 
 ALLOWED_HOSTS = ['phototagger491.herokuapp.com', 'localhost', '127.0.0.1']

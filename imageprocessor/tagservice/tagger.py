@@ -69,7 +69,7 @@ def _get_class_name(class_num: int):
     return _category_index[class_num]['name']
 
 # performs the actual detection
-def detect(user_image):
+def detect(user_image: Image):
     """Runs object detection to return a list of the objects in a given image
     
     Arguments:
