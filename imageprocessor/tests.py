@@ -51,13 +51,13 @@ class ViewTests(TestCase):
 
     def test_results_page_shows_images(self):
         client = Client()
-        with open(TEST_IMAGES_DIR + "/image1.jpg", "rb") as file1, open(TEST_IMAGES_DIR + "/image2.jpg", "rb") as file2:
+        with open(TEST_IMAGES_DIR + "/image1.jpg", "rb") as file1, open(TEST_IMAGES_DIR + "/image4_should_error.jpg", "rb") as file2:
             response = client.post(reverse('classify'), {'file': [file1, file2]})
             print(response.context['results'][1]['tags'])
         self.assertIsNotNone(response.context['results'][0]['url'])
         self.assertIsNotNone(response.context['results'][1]['url'])
         self.assertTrue('dog' in response.context['results'][0]['tags'])
-        self.assertTrue('kite' in response.context['results'][1]['tags'])
+        self.assertTrue(response.context['results'][1]['tags'] == [])
 
 
 class LoginTests(TestCase):
