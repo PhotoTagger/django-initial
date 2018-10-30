@@ -1,6 +1,6 @@
 language: python
 python:
-  - "3.6"
+- '3.6'
 install:
 - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
 - bash miniconda.sh -b -p $HOME/miniconda
@@ -8,27 +8,19 @@ install:
 - hash -r
 - conda config --set always_yes yes --set changeps1 no
 - conda update --quiet conda
-
-# useful for debugging
 - conda info -a
-
-# create conda environment
 - conda env create --quiet --name test-env -f=./environment.yml
-
-# activate the environment
 - source activate test-env
-
-# install codecov
 - pip install codecov
-
-# build notifications
 notifications:
-    slack: se491-fall2018:ccqfPhe1cEHeZJlQgCOe3m8C
-    
+  slack: se491-fall2018:ccqfPhe1cEHeZJlQgCOe3m8C
 script:
-#  run tests
-  - coverage run --source='.' manage.py test
-
+- coverage run --source='.' manage.py test
 after_success:
 - coveralls
 - codecov
+env:
+  global:
+  - secure: wixJPWgH58JOphbX2baIXUIoOC43NcNh7/Z7flQIQjEB34RxPV7A/qfnK6XLxV9Tjd0RdcWXifMj9Plxl34Lik7WiO+sLfWt6LOL76Emiwr/NszAgJY7CGq735tbTXi/GIiKwDKhsNqna30BxjKjUuFUb2Jnl4fWCfBgBBkZPtVy24E1qf2tI7YWE32C+/W/OAQxi1X7bx7UC0PURSFJhx+2ZfOu+BIdK8F6LFFYXETZZucdEunQK18H5ESVF+ZETEpLkVWjZKlbEBwHoyStNKa0xc69slYm6vvIhZWGBzFiLpRUK7Jdag9zasV946OtKLrkuvphwXbeAjhdc2I/Y/SRf5xF42hqQDtd6exDigUMBmO8kQiK9WYOV7cWbmtr8wIwpGXM1+GSk0UPUOhydKHYiUAku2C/q8+akdOn9YgFWhJzxxfjDUQb98D2B9f1A8thuA1oM5+UB3rvSX9bU8OPvivJ5er4yJaJMLqQDrCkJKeC0FO4IjoHxeWuSMrF15FCf5zKiVDlArSCHQPUhM0sDxAVtrsShgeMCNmHHwDbWCuFWB+iq6hb+xk+0OccjhhDF9ozhHSQ36UKiRDgu+EGQsrbQfDVPcsvPK8Axb+4ACz36eqMmQp9abVU5RznMModI+YRPq8e3yNDIpaAAfA6dqPJDkNCn/WnlY2uCMQ=
+  - secure: dAg1/abYsvp6mmdAPewrB8fsOePc5C6IKLNktWF246AmRlEuvPlKQlMRvt3Jq2Xm7kDYXQjwszF4qBFhzFfo1y3NXOgrdmstUhXiNtUI1t6KG7zILxm61+e/e7gWolbuGNm+je4+A8ZuaGiJaa1uTDDq/zxroLuLYXYrp1QEOTZKb7b6Hl8u1M8OAKo81mQGgXRbTACz2ID8/z0fMce34Y4vz2uC3NCH00auuAEuWqzuOrHzznfasC4Adu7ZetQVyNanTy++R+tylVSmqFOf2cIS3E9FDR+REGv0vmOTN2HTNmw9VWXdbbpHfYDOTnoS2K/wWAxikp5NTIv1d4nZ5GfUTtisO6T8Hy0npKuqmTw8aE6bZ54DKKZI7rCKlo8wix6UU+PJNQZ9B3rb0X27rWOPURhMZ3x9fH4/95F6ziGzWJWs7Tgs75fBb7L5hih/FPXF6npqVN7TDLcpWZkz14bZEDrrGj4HAq0XL5Rp41wkWexHu2VmZ/okXtGDDki8YMamYEyx2/wqVY8rw0htBqYNS6juHuuGM/z+rBjAH2IH561n7ZkwJebQyFzs52uNr/aJUGjD1guFvFFJfb3HPEh/LePvttW0E2FPyCo07vs5tKLh+oMSBErKBjQs507BZsOEfC739ztvxGkC9BmBPJGCwY4xmV+rVtecA7Khg0I=
+  - secure: WitQQ9J3kp372vJ9wuOzE+5LDC9LIdd12cwJ7KapYXtvlA0MCNBIfRUElOOLZvbW0VzdHWhj71QfTuraxjE/voQRuNiMm3+gg+4hEmFeyK3op1F5+4WdT4zlcN+ySR23Motb/ks7RKx/bVqIbIc/ELdBp+Vo4UCASfnap66+sHOKkp+//efaZN6EqMNrm7W6XmImen9ndjuOYOysbLenVB2mYsxt/TKv8W8uNccgPTUdxggL4fJNwk4I+U7daJrapXXXutBx4COmnWygyl3Kj8FlCFib3VM+tRBQHqXSNauqpZHYHZGMET7r4n+LfxMQLxmN4TLP2s34J84W0KJT4j7oBBaGUqFJAbRlqDSnhuQSlyt1DlQs/B/EFs9aQ+8Bl0ZkOhbeFk23cjA139OmNAZ0OTSQly7vIXUbDHlXo1XaIpBjnxEdPJZNS98HLvbutbqOXYxEBg2Zwr09fuLnX/zCqJS933eUXZt9LIKtUZH+Hgd57hyYfBt31VFSvP1Fi4IloAF6wykPVHURAx+SpVmBn8qKSX2aRnDZq4CdZfyUSxTvI8CkDezVKAOSUkhEfBa1oAxoVbjLZ8xWxPtd9OxivbZH6/rQFcYWGBWrMV6tISwmvFqYz0QaV4/homHGzycrFpoSE3CCGu40cZIgCQocOOgTEQ6+WoA/dgq/HU4=
