@@ -1,23 +1,39 @@
-<style>
-    .error {
-        list-style-type: none;
-        padding: 0;
-        font-size: 18px;
-        font-weight: bold;
-    }
-</style>
-<p>Logged in as {{request.user.username}}</p>
-{% if messages %}
-<ul class="messages error">
+{% extends "base.html" %}
+{% load cloudinary %}
+{% block body %}
+<div id='upload'>
+  <h1>Tag and Upload Images Using Our Server</h1>
+  {% if request.user.username %}
+    <p>Logged in as {{request.user.username}}</p>
+  {% endif %}
+  <form action="{% url 'classify' %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Upload">
+  </form>
+  {% if messages %}
+  <ul class="messages error">
     {% for message in messages %}
     <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
     {% endfor %}
-</ul>
-{% endif %}
-<form action="" method="post" enctype='multipart/form-data'>
-    {% csrf_token %}
-    {{ form }}
-    <input type="submit" value="Submit">
-</form>
-<p>
-</p>
+  </ul>
+  {% endif %}
+  {% if results %}
+  <div class="results">
+    <div class="uploaded_info">
+      {% for img_data in results %}
+      {% if img_data.url %}
+      <p>url: {{ img_data.url }}</p>
+      {% endif %}
+      {% if img_data.tags %}
+      <p>tags: {{ img_data.tags}}</p>
+      {% endif %}
+      <div class="image">
+        {% cloudinary img_data.url type="fetch" %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

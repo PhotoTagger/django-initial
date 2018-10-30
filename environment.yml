@@ -11,5 +11,4 @@ dependencies:
   - coverage=4.5.1
   - pip:
     - django-crispy-forms==1.7.2
-    - scout-apm
     - cloudinary

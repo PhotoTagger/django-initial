@@ -1,20 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Photo Tagger</title>
-    <style>
-        h2 {border:20px;}
-        a {display: block; border: 20px;}
-    </style>
-</head>
-<body>
-    <div>
-        <h2>Photo Tagger</h2>
-        <a href = '{% url 'classify' %}'>Click here to access Image classifier</a>
-        <a href = '{% url 'tagsearch' %}'>Click here to access tag searcher</a>
-        <a href = '{% url 'login' %}'>Click here to login</a>
-        <a href = '{% url 'register' %}'>Click here to register</a>
-    </div>
-</body>
-</html>
+{% extends "base.html" %}
+{% block body %}
+<style>
+    a { display: block; }
+</style>
+<div>
+    <h2>Photo Tagger</h2>
+    <a href = '{% url 'classify' %}'>Click here to access Image classifier</a>
+    <a href = '{% url 'tagsearch' %}'>Click here to access tag searcher</a>
+    <a href = '{% url 'login' %}'>Click here to login</a>
+    <a href = '{% url 'register' %}'>Click here to register</a>
+</div>
+{% endblock %}
