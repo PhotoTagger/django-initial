@@ -11,6 +11,7 @@
     {{ form }}
     <input type="submit" value="Upload">
   </form>
+  <a href = '{% url 'index' %}'>Back to Home Page</a>
   {% if messages %}
   <ul class="messages error">
     {% for message in messages %}

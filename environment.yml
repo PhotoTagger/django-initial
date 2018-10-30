@@ -12,3 +12,4 @@ dependencies:
   - pip:
     - django-crispy-forms==1.7.2
     - cloudinary
+    - dj-database-url==0.5.0

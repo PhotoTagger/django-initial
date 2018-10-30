@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {% extends "base.html" %}
 {% block body %}
 <div>
@@ -10,6 +11,11 @@
 			<input type="submit" name = "submit" value="submit">
 		</div>
 	</form>
-	<p> Once you type in a tag and click submit, pictures that match the tag will appear. </p>
+	<div>
+		<p> Once you type in a tag and click submit, pictures that match the tag will appear. </p>
+		<div>
+			<a href = '{% url 'index' %}'>Back to Home Page</a>
+		</div>
+	</div>
 </div>
 {% endblock %}

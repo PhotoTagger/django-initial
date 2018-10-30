@@ -55,8 +55,7 @@ class TaggerTests(TestCase):
 
                 tags = detect(image)
                 print('Detection Complete for {}:\ntags:{}\n'.format(image_name, pretty_print_tags(tags)))
-
-            self.assertTrue(len(tags) >= 1)
+                self.assertTrue(len(tags) >= 1)
 
     def test_results_page_shows_image(self):
         client = Client()

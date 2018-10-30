@@ -1,4 +1,7 @@
 {% extends "base.html" %}
 {% block body %}
-<p> Pictures that have same tag will appear on this page. </p>
+<div>
+	<p> Pictures that have same tag will appear on this page. </p>
+	<a href = '{% url 'index' %}'>Back to Home Page</a>
+</div>
 {% endblock %}
