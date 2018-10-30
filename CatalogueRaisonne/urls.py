@@ -22,7 +22,6 @@ from django.conf.urls.static import static
 admin.autodiscover()
 
 urlpatterns = [
-    # URL for uploading an image
     path('registration/', include('django.contrib.auth.urls')),
     path('register/', register, name='register'),
     path('', index, name='index'),
