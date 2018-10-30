@@ -1,6 +1,7 @@
 from django.test import TestCase, Client
 from django.contrib.auth.models import User
 from django.urls import reverse
+from rest_framework.test import APITestCase, APIClient
 
 # Create your tests here.
 class ViewTests(TestCase):
@@ -44,4 +45,9 @@ class LoginTests(TestCase):
         response = client.post(reverse('register'),{'username': "TestUser1", 'password1': "testpassword1", 'password2': "testpassword1"})
         self.assertTrue(client.login(username="TestUser1", password="testpassword1"))
 
+class ApiTests(APITestCase):
 
+    def test_classify_api_no_image(self):
+        client = APIClient()
+        response = client.post("/api/classify/")
+        self.assertEqual(response.status_code, 400)

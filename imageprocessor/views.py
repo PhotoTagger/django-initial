@@ -113,20 +113,23 @@ def register(request):
 
 class ClassifyAPI(APIView):
 
-    def post(self, request, format=None):           
+    def post(self, request, format=None):
+        form = ImageForm(request.POST or None, request.FILES or None)       
         try:
             image_file = request.FILES['file']
             image = Image.open(image_file)
-            tags = detect(image)
-            #this try except was added so application works while the database is not working.
-            try:
-                new_image = form.save()
-                new_image.save()
-                context['new_image'] = new_image
-            except:
-                return Response(tags, status=status.HTTP_202_ACCEPTED)
-            return Response(tags, status=status.HTTP_200_OK)
+            tags = detect(image) 
+            if (tags):
+                try:
+                    new_image = form.save()
+                    new_image.save()
+                    return Response(tags, status=status.HTTP_200_OK)
+                except:
+                    return Response(tags, status=status.HTTP_202_ACCEPTED)
+            return Response(NO_TAGS_ERROR_MSG, status=status.HTTP_204_NO_CONTENT)
         except ValueError as e:
-            return Response(NO_TAGS_ERROR_MSG, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response(NO_TAGS_ERROR_MSG, status=status.HTTP_204_NO_CONTENT)
         except OSError as e:
-            return Response(BAD_FILE_ERROR_MSG, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response(BAD_FILE_ERROR_MSG, status=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
+        except:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
