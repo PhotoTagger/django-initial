@@ -16,7 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from imageprocessor.views import classify, index, tag_search, tagged_pictures, register
-
+from django.conf import settings
+from django.conf.urls.static import static
 
 admin.autodiscover()
 
@@ -29,4 +30,4 @@ urlpatterns = [
     path('tagsearch/', tag_search, name = 'tagsearch'),
     path('tagsearch/tagged_pictures/', tagged_pictures, name = 'tagsearch/tagged_pictures'),
     path('classify/', classify, name='classify')
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -85,12 +85,10 @@ def process_bulk_images(request):
 def process_single_image(request):
     data = {}
     generated_tags = get_tags_for_single_image(request)
-    res = upload_image_to_cloudinary(request.FILES.get('file'), generated_tags)
+    response_data = upload_image_to_cloudinary(request.FILES.get('file'), generated_tags)
 
-    if generated_tags:
-        data['tags'] = generated_tags
-    if res:
-        data['url'] = res.get('url', '')
+    data['tags'] = generated_tags or None
+    data['url'] = response_data.get('url', '') or None
 
     return [data]
 
