@@ -1,7 +1,11 @@
 from django.test import TestCase, Client
 from django.contrib.auth.models import User
 from django.urls import reverse
-from rest_framework.test import APITestCase, APIClient
+from rest_framework.test import APITestCase
+from .tagservice.test import TEST_IMAGES_DIR
+from PIL import Image
+
+import os
 
 # Create your tests here.
 class ViewTests(TestCase):
@@ -41,9 +45,15 @@ class LoginTests(TestCase):
         response = client.post(reverse('register'),{'username': "TestUser1", 'password1': "testpassword1", 'password2': "testpassword1"})
         self.assertTrue(client.login(username="TestUser1", password="testpassword1"))
 
-class ApiTests(APITestCase):
+class ClassifyApiTests(APITestCase):
 
     def test_classify_api_no_image(self):
-        client = APIClient()
-        response = client.post("/api/classify/")
+        response = self.client.post("/api/classify/")
         self.assertEqual(response.status_code, 400)
+
+    def test_classify_api_cat_and_dog(self):
+        with open(os.path.join(TEST_IMAGES_DIR,"image3.jpg"), "rb") as file:
+            response = self.client.post("/api/classify/", {'file': file}, format='multipart')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('cat', response.data)
+        self.assertIn('dog', response.data)
