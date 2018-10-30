@@ -2,7 +2,6 @@ from builtins import ValueError
 
 from django.test import TestCase, Client
 from PIL import Image
-from django.urls import reverse
 import os
 
 from .tagger import detect
@@ -56,23 +55,6 @@ class TaggerTests(TestCase):
                 tags = detect(image)
                 print('Detection Complete for {}:\ntags:{}\n'.format(image_name, pretty_print_tags(tags)))
                 self.assertTrue(len(tags) >= 1)
-
-    def test_results_page_shows_image(self):
-        client = Client()
-        with open(TEST_IMAGES_DIR + "/image1.jpg", "rb") as file:
-            response = client.post(reverse('classify'), {'file': file})
-        self.assertIsNotNone(response.context['results'][0]['url'])
-        self.assertTrue('dog' in response.context['results'][0]['tags'])
-
-    def test_results_page_shows_images(self):
-        client = Client()
-        with open(TEST_IMAGES_DIR + "/image1.jpg", "rb") as file1, open(TEST_IMAGES_DIR + "/image2.jpg", "rb") as file2:
-            response = client.post(reverse('classify'), {'file': [file1, file2]})
-            print(response.context['results'][1]['tags'])
-        self.assertIsNotNone(response.context['results'][0]['url'])
-        self.assertIsNotNone(response.context['results'][1]['url'])
-        self.assertTrue('dog' in response.context['results'][0]['tags'])
-        self.assertTrue('kite' in response.context['results'][1]['tags'])
 
 
 # Helper Functions
