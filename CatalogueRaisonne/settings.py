@@ -31,13 +31,10 @@ ALLOWED_HOSTS = ['phototagger491.herokuapp.com', 'localhost', '127.0.0.1']
 
 
 
-# Scout settings
-SCOUT_NAME = "Photo Tagger"
 
 # Application definition
 
 INSTALLED_APPS = [
-    'scout_apm.django',  # should be listed first
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

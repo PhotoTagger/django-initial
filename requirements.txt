@@ -4,6 +4,7 @@ cycler==0.10.0
 dj-database-url==0.5.0
 django-crispy-forms==1.7.2
 Django==2.1.2
+djangorestframework==3.9.0
 gast==0.2.0
 grpcio==1.15.0
 gunicorn==19.9.0
@@ -25,4 +26,3 @@ tensorboard==1.11.0
 tensorflow==1.11.0
 termcolor==1.1.0
 Werkzeug==0.14.1
-scout-apm
