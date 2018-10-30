@@ -21,6 +21,23 @@ python manage.py migrate
 python manage.py runserver
 ```
 
+To set up your environment, you need to create a one-time environment variable for making requests to cloudinary
+For access to one of the keys, please contact an administrator of the repo or create your own account on cloudinary
+1. Setup the `CLOUDINARY_URL` environment variable by copying it from the [Management Console](https://cloudinary.com/console):
+
+    Using zsh/bash/sh
+
+        $ export CLOUDINARY_URL=cloudinary://API-Key:API-Secret@Cloud-name
+
+    Using tcsh/csh
+
+        $ setenv CLOUDINARY_URL cloudinary://API-Key:API-Secret@Cloud-name
+
+    Using Windows command prompt/PowerShell
+
+        > set CLOUDINARY_URL=cloudinary://API-Key:API-Secret@Cloud-name
+
+ 
 # Rules for committing new code
 Lets agree on a short list of leading active verbs:
 ```
