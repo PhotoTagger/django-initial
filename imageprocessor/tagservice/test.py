@@ -61,16 +61,7 @@ class TaggerTests(TestCase):
         client = Client()
         with open(TEST_IMAGES_DIR + "/image1.jpg", "rb") as file, open(TEST_IMAGES_DIR + "/image2.jpg", "rb") as file2:
             response = client.post(reverse('classify'), { 'file' : [file, file2]})
-        self.assertIsNotNone(response.context['new_image'])
-
-
-
-
-    def test_results_page_shows_tags(self):
-        client = Client()
-        with open(TEST_IMAGES_DIR + "/image1.jpg", "rb") as file, open(TEST_IMAGES_DIR + "/image2.jpg", "rb") as file2:
-            response = client.post(reverse('classify'), { 'file' : [file, file2]})
-        self.assertIsNotNone(response.context['tags'])
+        self.assertIsNotNone(response.context['results'])
 
 
 # Helper Functions
