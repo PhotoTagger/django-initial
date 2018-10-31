@@ -1,6 +1,6 @@
 language: python
 python:
-  - "3.6"
+- '3.6'
 install:
 - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
 - bash miniconda.sh -b -p $HOME/miniconda
@@ -8,27 +8,14 @@ install:
 - hash -r
 - conda config --set always_yes yes --set changeps1 no
 - conda update --quiet conda
-
-# useful for debugging
 - conda info -a
-
-# create conda environment
 - conda env create --quiet --name test-env -f=./environment.yml
-
-# activate the environment
 - source activate test-env
-
-# install codecov
 - pip install codecov
-
-# build notifications
 notifications:
-    slack: se491-fall2018:ccqfPhe1cEHeZJlQgCOe3m8C
-    
+  slack: se491-fall2018:ccqfPhe1cEHeZJlQgCOe3m8C
 script:
-#  run tests
-  - coverage run --source='.' manage.py test
-
+- coverage run --source='.' manage.py test
 after_success:
 - coveralls
 - codecov

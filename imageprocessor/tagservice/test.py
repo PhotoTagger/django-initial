@@ -1,6 +1,7 @@
+from builtins import ValueError
+
 from django.test import TestCase, Client
 from PIL import Image
-from django.urls import reverse
 import os
 
 from .tagger import detect
@@ -37,16 +38,14 @@ class TaggerTests(TestCase):
         self.assertTrue("cat" in tags)
 
     def test_error_is_raised_when_no_tags_generated(self):
-         image_name = "image4_should_error.jpg"
-         image = open_image(image_name)
+        image_name = "image4_should_error.jpg"
+        image = open_image(image_name)
 
-         with self.assertRaises(ValueError):
-             detect(image)
-
+        with self.assertRaises(ValueError):
+            detect(image)
 
     def test_detection_for_every_image(self):
         test_image_names = get_every_file_name_in_dir()
-
         # load images and perform detection
         for image_name in test_image_names:
             if image_name != "image4_should_error.jpg":
@@ -55,14 +54,8 @@ class TaggerTests(TestCase):
 
                 tags = detect(image)
                 print('Detection Complete for {}:\ntags:{}\n'.format(image_name, pretty_print_tags(tags)))
-
-            
                 self.assertTrue(len(tags) >= 1)
-    def test_results_page_shows_image(self):
-        client = Client()
-        with open(TEST_IMAGES_DIR + "/image1.jpg", "rb") as file:
-            response = client.post(reverse('classify'), { 'file' : file})
-        self.assertIsNotNone(response.context['new_image'])
+
 
 # Helper Functions
 def open_image(image_name):

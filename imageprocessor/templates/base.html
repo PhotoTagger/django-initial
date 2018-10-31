@@ -1,0 +1,16 @@
+{% load cloudinary %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Photo Tagger</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    {% cloudinary_includes %}
+    {% cloudinary_js_config %}
+    <script>
+      {% block javascript %}{% endblock %}
+    </script>
+  </head>
+  <body>
+    {% block body %}{% endblock %}
+  </body>
+</html>

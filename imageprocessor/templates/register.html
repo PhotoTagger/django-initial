@@ -1,11 +1,11 @@
 {% load crispy_forms_tags %}
-<form method="post">
-    {% csrf_token %}
-    {{form|crispy}}
-    <input type="submit" value="Submit">
-</form>
-<p>
-</p>
-<p>
-	<a href = '{% url 'index' %}'>Back to Home Page</a>
-</p>
+<div>
+    <form method="post">
+        {% csrf_token %}
+        {{form|crispy}}
+        <input type="submit" value="Submit">
+    </form>
+    <p>
+        <a href = '{% url 'index' %}'>Back to Home Page</a>
+    </p>
+</div>
