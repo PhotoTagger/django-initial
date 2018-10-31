@@ -8,10 +8,15 @@ from PIL import Image
 from imageprocessor.tagservice.tagger import detect
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
-from django.shortcuts import render
 
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+
+from django.shortcuts import render
 from .forms import ImageForm
 from .models import Photo
+
 
 NO_TAGS_ERROR_MSG = "We couldn't generate tags for that image. Please try a different photo"
 BAD_FILE_ERROR_MSG = "We can't process that file type. Please submit a different file"
@@ -116,7 +121,7 @@ def process_single_image(request):
     return [data]
 
 
-@csrf_exempt
+
 def classify(request):
     context = {'form': ImageForm()}
 
@@ -139,3 +144,30 @@ def register(request):
         return HttpResponseRedirect(reverse('login'))
     context['form'] = form
     return render(request, 'register.html', context)
+
+
+class ClassifyAPI(APIView):
+
+    def post(self, request, format=None):
+        response_data = {
+            'url' : None,
+            'tags' : []
+        }      
+        try:
+            image_file = request.FILES['file']
+            image = Image.open(image_file)
+            tags = detect(image) 
+            try:
+                response_data['tags'] = tags
+                current_res = upload_image_to_cloudinary(image_file, tags)
+                response_data['url'] = current_res.get('url', None)
+                return Response(response_data, status=status.HTTP_200_OK)
+            except:
+                return Response(response_data, status=status.HTTP_202_ACCEPTED)
+            return Response(NO_TAGS_ERROR_MSG, status=status.HTTP_204_NO_CONTENT)
+        except ValueError:
+            return Response(NO_TAGS_ERROR_MSG, status=status.HTTP_204_NO_CONTENT)
+        except OSError:
+            return Response(BAD_FILE_ERROR_MSG, status=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
+        except:
+            return Response(status=status.HTTP_400_BAD_REQUEST)

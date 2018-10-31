@@ -9,6 +9,7 @@ dependencies:
   - python=3.6.6
   - tensorflow=1.11.0
   - coverage=4.5.1
+  - djangorestframework=3.9.0
   - pip:
     - django-crispy-forms==1.7.2
     - cloudinary

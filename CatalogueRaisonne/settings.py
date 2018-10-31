@@ -43,6 +43,7 @@ INSTALLED_APPS = [
 	
     'imageprocessor',
     'crispy_forms',
+    'rest_framework',
     'cloudinary',
 ]
 
