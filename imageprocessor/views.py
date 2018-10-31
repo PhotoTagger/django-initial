@@ -157,14 +157,13 @@ class ClassifyAPI(APIView):
             image_file = request.FILES['file']
             image = Image.open(image_file)
             tags = detect(image) 
-            if (tags):
-                try:
-                    response_data['tags'] = tags
-                    current_res = upload_image_to_cloudinary(image_file, tags)
-                    response_data['url'] = current_res.get('url', '') or None
-                    return Response(response_data, status=status.HTTP_200_OK)
-                except:
-                    return Response(response_data, status=status.HTTP_202_ACCEPTED)
+            try:
+                response_data['tags'] = tags
+                current_res = upload_image_to_cloudinary(image_file, tags)
+                response_data['url'] = current_res.get('url', None)
+                return Response(response_data, status=status.HTTP_200_OK)
+            except:
+                return Response(response_data, status=status.HTTP_202_ACCEPTED)
             return Response(NO_TAGS_ERROR_MSG, status=status.HTTP_204_NO_CONTENT)
         except ValueError:
             return Response(NO_TAGS_ERROR_MSG, status=status.HTTP_204_NO_CONTENT)
