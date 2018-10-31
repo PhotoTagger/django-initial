@@ -107,7 +107,7 @@ You can also try this API by using the postman app.
 Successful responses from this API will have the following JSON structure. Where "url" is the location where the image was stored in the cloud and "tags" is an array of tags generated for the image.
 ```JSON
 {
-    "url": "http://res.cloudinary.com/somethingsomething.jpg",
+    "url": "http://res.cloudinary.com/yourimage.jpg",
     "tags": [
         "tagA",
         "tagB",
