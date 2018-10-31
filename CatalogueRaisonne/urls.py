@@ -15,7 +15,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from imageprocessor.views import classify, index, tag_search, tagged_pictures, register
+from ptlanding.views import index
+from imageclassifier.views import classify
+from tagsearcher.views import tag_search, tagged_pictures
+from ptusers.views import register
+
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import urls
