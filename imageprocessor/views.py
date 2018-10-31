@@ -121,7 +121,7 @@ def process_single_image(request):
     return [data]
 
 
-@csrf_exempt
+
 def classify(request):
     context = {'form': ImageForm()}
 
@@ -145,14 +145,14 @@ def register(request):
     context['form'] = form
     return render(request, 'register.html', context)
 
+
 class ClassifyAPI(APIView):
 
     def post(self, request, format=None):
         response_data = {
             'url' : None,
             'tags' : []
-        }
-        form = ImageForm(request.POST or None, request.FILES or None)       
+        }      
         try:
             image_file = request.FILES['file']
             image = Image.open(image_file)
@@ -166,9 +166,9 @@ class ClassifyAPI(APIView):
                 except:
                     return Response(response_data, status=status.HTTP_202_ACCEPTED)
             return Response(NO_TAGS_ERROR_MSG, status=status.HTTP_204_NO_CONTENT)
-        except ValueError as e:
+        except ValueError:
             return Response(NO_TAGS_ERROR_MSG, status=status.HTTP_204_NO_CONTENT)
-        except OSError as e:
+        except OSError:
             return Response(BAD_FILE_ERROR_MSG, status=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
         except:
             return Response(status=status.HTTP_400_BAD_REQUEST)
