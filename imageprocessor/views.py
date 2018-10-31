@@ -148,6 +148,10 @@ def register(request):
 class ClassifyAPI(APIView):
 
     def post(self, request, format=None):
+        response_data = {
+            'url' : None,
+            'tags' : []
+        }
         form = ImageForm(request.POST or None, request.FILES or None)       
         try:
             image_file = request.FILES['file']
@@ -155,10 +159,12 @@ class ClassifyAPI(APIView):
             tags = detect(image) 
             if (tags):
                 try:
-                    # TODO Add ability for API to save image to cloudinary here
-                    return Response(tags, status=status.HTTP_200_OK)
+                    response_data['tags'] = tags
+                    current_res = upload_image_to_cloudinary(image_file, tags)
+                    response_data['url'] = current_res.get('url', '') or None
+                    return Response(response_data, status=status.HTTP_200_OK)
                 except:
-                    return Response(tags, status=status.HTTP_202_ACCEPTED)
+                    return Response(response_data, status=status.HTTP_202_ACCEPTED)
             return Response(NO_TAGS_ERROR_MSG, status=status.HTTP_204_NO_CONTENT)
         except ValueError as e:
             return Response(NO_TAGS_ERROR_MSG, status=status.HTTP_204_NO_CONTENT)

@@ -95,8 +95,9 @@ class ClassifyApiTests(APITestCase):
         with open(os.path.join(TEST_IMAGES_DIR,"image3.jpg"), "rb") as file:
             response = self.client.post("/api/classify/", {'file': file}, format='multipart')
         self.assertEqual(response.status_code, 200)
-        self.assertIn('cat', response.data)
-        self.assertIn('dog', response.data)
+        self.assertIn('cat', response.data['tags'])
+        self.assertIn('dog', response.data['tags'])
+        self.assertIsNotNone(response.data['url'])
 
     def test_classify_api_no_content(self):
         with open(os.path.join(TEST_IMAGES_DIR,"image4_should_error.jpg"), "rb") as file:

@@ -90,7 +90,7 @@ coverage report -m
 ### /api/classify/
 
 You can try the API by using this curl command.
-```base
+```bash
 curl -F "file=@[FULL PATH TO IMAGE FILE]" http://127.0.0.1:8000/api/classify/
 ```
 
@@ -104,3 +104,14 @@ You can also try this API by using the postman app.
    * Click the Choose Files button under value and select the image you want to tag.
    * Press the Send button
 
+Successful responses from this API will have the following JSON structure. Where "url" is the location where the image was stored in the cloud and "tags" is an array of tags generated for the image.
+```JSON
+{
+    "url": "http://res.cloudinary.com/somethingsomething.jpg",
+    "tags": [
+        "tagA",
+        "tagB",
+        "tagC"
+    ]
+}
+```
