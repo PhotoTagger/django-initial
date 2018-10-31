@@ -6,6 +6,7 @@ from .tagservice.test import TEST_IMAGES_DIR
 from PIL import Image
 
 import os
+import io
 
 # Create your tests here.
 class ViewTests(TestCase):
@@ -61,3 +62,15 @@ class ClassifyApiTests(APITestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn('cat', response.data)
         self.assertIn('dog', response.data)
+
+    def test_classify_api_no_content(self):
+        with open(os.path.join(TEST_IMAGES_DIR,"image4_should_error.jpg"), "rb") as file:
+            response = self.client.post("/api/classify/", {'file': file}, format='multipart')
+        self.assertEqual(response.status_code, 204)
+        self.assertEqual(response.data, "We couldn't generate tags for that image. Please try a different photo")
+
+    def test_classify_api_unsupported_media(self):
+        with io.StringIO("This is not a file") as file:
+            response = self.client.post("/api/classify/", {'file': file}, format='multipart')
+        self.assertEqual(response.status_code, 415)
+        self.assertEqual(response.data, "We can't process that file type. Please submit a different file")
