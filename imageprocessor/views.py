@@ -155,8 +155,7 @@ class ClassifyAPI(APIView):
             tags = detect(image) 
             if (tags):
                 try:
-                    new_image = form.save()
-                    new_image.save()
+                    # TODO Add ability for API to save image to cloudinary here
                     return Response(tags, status=status.HTTP_200_OK)
                 except:
                     return Response(tags, status=status.HTTP_202_ACCEPTED)
