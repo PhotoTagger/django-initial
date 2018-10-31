@@ -18,7 +18,8 @@ from django.urls import path, include
 from imageprocessor.views import classify, index, tag_search, tagged_pictures, register
 from django.conf import settings
 from django.conf.urls.static import static
-from django.contrib.auth import urls
+
+admin.autodiscover()
 
 urlpatterns = [
     path('registration/', include('django.contrib.auth.urls')),
