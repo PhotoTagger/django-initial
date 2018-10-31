@@ -1,20 +1,22 @@
-from builtins import OSError, ValueError
+from builtins import OSError, ValueError, len
 
-from django.shortcuts import render
-from base64 import b64encode
-from .models import UploadedImage
-from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+import cloudinary
 from django.contrib.auth.forms import UserCreationForm
-from imageprocessor.forms import ImageForm
 from PIL import Image
 from imageprocessor.tagservice.tagger import detect
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+
+from django.shortcuts import render
+from .forms import ImageForm
+from .models import Photo
+
 
 NO_TAGS_ERROR_MSG = "We couldn't generate tags for that image. Please try a different photo"
 BAD_FILE_ERROR_MSG = "We can't process that file type. Please submit a different file"
@@ -28,73 +30,105 @@ def index(request):
 def tag_search(request):
     context = {}
     if request.method == 'POST':
-        context['tag'] = request.POST["tagsearch"]
-        return render(request, 'tagged_pictures.html', context)
-        # whatever is typed in, will be stored into tag_searched
-        # tag_searched = request.POST["tag"]
-        # context['tag'] = tag_searched
-    return render(request, 'tagsearch.html')
+        search_query = request.POST["tagsearch"]
+        search = 'resource_type:image AND tags=' + search_query
 
+        result = cloudinary.Search() \
+                .expression(search) \
+                .with_field('tags') \
+                .max_results('10') \
+                .execute()
+
+        images = []
+
+        if result and 'resources' in result:
+            for img in result["resources"]:
+                images.append(img["url"])
+
+        context['search_query'] = search_query
+        context['images'] = images
+        context['search_result'] = result
+
+        return render(request, 'tagged_pictures.html', context)
+
+    return render(request, 'tagsearch.html')
 
 
 def tagged_pictures(request):
     return render(request, 'tagged_pictures.html')
 
-def generate_tags(request):
+
+def get_tags_for_single_image(request):
     tags = []
-    for image_file in request.FILES.getlist('file'):
-        image = Image.open(image_file)
-        tags_found = detect(image)
-        tags.append(tags_found)
+    try:
+        open_image = Image.open(request.FILES.get('file'))
+        tags = detect(open_image)
+
+        # this line enables us to read from the file more than once
+        request.FILES.get('file').seek(0)
+    except ValueError:
+        messages.add_message(request, messages.ERROR, NO_TAGS_ERROR_MSG)
+    except OSError:
+        messages.add_message(request, messages.ERROR, BAD_FILE_ERROR_MSG)
     return tags
 
-def format_tags(tags):
-    tag_string_list = []
-    pic_number = 1
-    for tags_found in tags:
-        tag_string = ', '.join(map(str, tags_found))
-        tag_string_list.append(f'{pic_number}: {tag_string}.')
-        pic_number += 1
 
-    return tag_string_list
-
-def save_image(request):
-    ''' '''
-    form = ImageForm(request.POST or None, request.FILES or None)
-    new_image_list = []
-    # this try except was added so application works while the database is not working.
+def get_tags_for_image(request, img):
+    tags = []
     try:
-        if form.is_valid():
-            for image_file in request.FILES.getlist('file'):
-                instance = UploadedImage(file = image_file)
-                instance.save()
-                new_image_list.append(instance)
-        '''if form.is_valid():
-            new_image = form.save()
-            new_image.save()
-            return new_image'''
-        return new_image_list
-    except:
-        messages.add_message(request, messages.ERROR, "image not saved")
+        open_image = Image.open(img)
+        tags = detect(open_image)
+        return tags
+    except ValueError:
+        messages.add_message(request, messages.ERROR, NO_TAGS_ERROR_MSG)
+    except OSError:
+        messages.add_message(request, messages.ERROR, BAD_FILE_ERROR_MSG)
+    return tags
+
+
+def upload_image_to_cloudinary(file, tags):
+    file.seek(0)
+
+    return cloudinary.uploader.upload(
+        file,
+        use_filename=True,
+        tags=tags
+    )
+
+
+def process_bulk_images(request):
+    files = request.FILES.getlist('file')
+    results = []
+    for img in files:
+        res = {}
+        current_tag = get_tags_for_image(request, img)
+        current_res = upload_image_to_cloudinary(img, current_tag)
+
+        res['tags'] = current_tag
+        res['url'] = current_res.get('url', '')
+        results.append(res)
+    return results
+
+
+def process_single_image(request):
+    data = {}
+    generated_tags = get_tags_for_single_image(request)
+    response_data = upload_image_to_cloudinary(request.FILES.get('file'), generated_tags)
+
+    data['tags'] = generated_tags or None
+    data['url'] = response_data.get('url', '') or None
+
+    return [data]
 
 
 @csrf_exempt
 def classify(request):
-    form = ImageForm(request.POST or None, request.FILES or None)
-    context = {"form": form}
+    context = {'form': ImageForm()}
+
     if request.method == 'POST':
-        try:
-            tags = generate_tags(request)
-            context['tags'] = format_tags(tags)
-            context['new_image'] = save_image(request)
-            # print(type(context['new image']))
-        except ValueError:
-            messages.add_message(request, messages.ERROR, NO_TAGS_ERROR_MSG)
-            return render(request, 'input.html', context)
-        except OSError:
-            messages.add_message(request, messages.ERROR, BAD_FILE_ERROR_MSG)
-            return render(request, 'input.html', context)
-        return render(request, 'output.html', context)
+        image_count = len(request.FILES.getlist('file'))
+        context['results'] = process_single_image(request) if image_count <= 1 else process_bulk_images(request)
+
     return render(request, 'input.html', context)
 
 
