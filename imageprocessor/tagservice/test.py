@@ -2,6 +2,7 @@ from builtins import ValueError
 
 from django.test import TestCase, Client
 from PIL import Image
+from django.urls import reverse
 import os
 
 from .tagger import detect
