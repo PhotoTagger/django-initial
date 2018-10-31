@@ -25,11 +25,27 @@ def index(request):
 def tag_search(request):
     context = {}
     if request.method == 'POST':
-        context['tag'] = request.POST["tagsearch"]
+        search_query = request.POST["tagsearch"]
+        search = 'resource_type:image AND tags=' + search_query
+
+        result = cloudinary.Search() \
+                .expression(search) \
+                .with_field('tags') \
+                .max_results('10') \
+                .execute()
+
+        images = []
+
+        if result and 'resources' in result:
+            for img in result["resources"]:
+                images.append(img["url"])
+
+        context['search_query'] = search_query
+        context['images'] = images
+        context['search_result'] = result
+
         return render(request, 'tagged_pictures.html', context)
-        # whatever is typed in, will be stored into tag_searched
-        # tag_searched = request.POST["tag"]
-        # context['tag'] = tag_searched
+
     return render(request, 'tagsearch.html')
 
 

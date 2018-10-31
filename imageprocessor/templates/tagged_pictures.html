@@ -1,7 +1,16 @@
 {% extends "base.html" %}
+{% load cloudinary %}
 {% block body %}
 <div>
-	<p> Pictures that have same tag will appear on this page. </p>
+	<p> Pictures that have same {{ search_query }} will appear on this page. </p>
+	{% if search_result %}
+	<p>We found {{ search_result.total_count }} matching images</p>
+	<div>
+		{% for url in images %}
+			<p>{% cloudinary url type="fetch" %}</p>
+		{% endfor %}
+	</div>
+	{% endif %}
 	<a href = '{% url 'index' %}'>Back to Home Page</a>
 </div>
 {% endblock %}

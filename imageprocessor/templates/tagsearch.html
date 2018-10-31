@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 {% block body %}
 <div>
-	<form action="tagged_pictures/">
+	<form action = "" method="post">
+		{% csrf_token %}
 		<div>
 			<p>Please enter the tag you want to search:</p>
 			<input type="text" name="tagsearch">

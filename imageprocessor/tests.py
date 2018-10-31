@@ -53,11 +53,16 @@ class ViewTests(TestCase):
         client = Client()
         with open(TEST_IMAGES_DIR + "/image1.jpg", "rb") as file1, open(TEST_IMAGES_DIR + "/image4_should_error.jpg", "rb") as file2:
             response = client.post(reverse('classify'), {'file': [file1, file2]})
-            print(response.context['results'][1]['tags'])
         self.assertIsNotNone(response.context['results'][0]['url'])
         self.assertIsNotNone(response.context['results'][1]['url'])
         self.assertTrue('dog' in response.context['results'][0]['tags'])
         self.assertTrue(response.context['results'][1]['tags'] == [])
+
+    def test_tag_search_post_request_works(self):
+        client = Client()
+        response = client.post("/tagsearch/", {'tagsearch': ['dog']})
+        self.assertTrue(response.status_code == 200)
+        self.assertTrue(response.context['search_result'].get("total_count") >= 1)
 
 
 class LoginTests(TestCase):
