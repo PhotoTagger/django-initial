@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block body %}
+<style>
+    h2 { margin: 20px; }
+    a { display: block; margin: 20px; }
+</style>
+<div>
+    <h2>My Images</h2>
+    {% for picture in my_pictures %}
+        <br><a href = "{{picture.url}}"> {%for tag in picture.get_tags %} {{tag}} {% endfor %}</a>
+    {% endfor %}
+    <hr>
+    <a href = '{% url 'index' %}'>Home</a>
+</div>
+{% endblock %}

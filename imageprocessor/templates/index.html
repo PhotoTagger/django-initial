@@ -8,7 +8,11 @@
     <h2>Photo Tagger</h2>
     <a href = '{% url 'classify' %}'>Click here to access Image classifier</a>
     <a href = '{% url 'tagsearch' %}'>Click here to access tag searcher</a>
+    {% if user.is_authenticated %}
+    <a href = '{% url 'view_my_pictures' %}'>Click here to view your pictures</a>
+    {% else %}
     <a href = '{% url 'login' %}'>Click here to login</a>
     <a href = '{% url 'register' %}'>Click here to register</a>
+    {% endif%}
 </div>
 {% endblock %}

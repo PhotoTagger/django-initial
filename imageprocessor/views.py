@@ -15,7 +15,7 @@ from rest_framework import status
 
 from django.shortcuts import render
 from .forms import ImageForm
-from .models import Photo
+from .models import Photo, Tag
 
 
 NO_TAGS_ERROR_MSG = "We couldn't generate tags for that image. Please try a different photo"
@@ -123,12 +123,22 @@ def process_single_image(request):
 
 
 def classify(request):
-    context = {'form': ImageForm()}
-
+    form = ImageForm(request.POST or None, request.FILES or None)
+    context = {'form' :form }
     if request.method == 'POST':
         image_count = len(request.FILES.getlist('file'))
         context['results'] = process_single_image(request) if image_count <= 1 else process_bulk_images(request)
-
+        for result in context['results']:
+            try:
+                if request.user:
+                    new_photo = form.save(commit=False)
+                    new_photo.url = result['url']
+                    new_photo.user = request.user
+                    new_photo.save()
+                    new_photo.create_related_tags(result['tags'])
+            except Exception as e:
+                print(request.user)
+                print(e)
     return render(request, 'input.html', context)
 
 
@@ -144,6 +154,11 @@ def register(request):
         return HttpResponseRedirect(reverse('login'))
     context['form'] = form
     return render(request, 'register.html', context)
+
+def view_my_pictures(request):
+    context = {'my_pictures' : Photo.objects.filter(user = request.user)}
+    print(Photo.objects.filter(user = request.user).count())
+    return render(request, 'view_my_pictures.html', context)
 
 
 class ClassifyAPI(APIView):
