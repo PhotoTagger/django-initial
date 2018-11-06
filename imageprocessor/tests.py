@@ -41,6 +41,29 @@ class ViewTests(TestCase):
         response = client.get(reverse('register'))
         self.assertTrue(response.status_code == 200)
 
+    def test_not_logged_in_user_cannot_view_my_pictures(self):
+        client = Client()
+        response = client.get(reverse('view_my_pictures'))
+        self.assertTrue(response.status_code == 302)
+
+    def test_logged_in_user_can_view_my_pictures(self):
+        client = Client()
+        client.post(reverse('register'),{'username': "TestUser1", 'password1': "testpassword1", 'password2': "testpassword1"})
+        client.login(username="TestUser1", password="testpassword1")
+        response = client.get(reverse('view_my_pictures'))
+        self.assertTrue(response.status_code == 200)
+
+    def test_view_my_pictures_picture_count(self):
+        client = Client()
+        response = client.post(reverse('register'),{'username': "TestUser1", 'password1': "testpassword1", 'password2': "testpassword1"})
+        client.login(username="TestUser1", password="testpassword1")
+        images_to_upload = 5
+        for i in range(images_to_upload):
+            with open(TEST_IMAGES_DIR + "/image1.jpg", "rb") as file:
+                    client.post(reverse('classify'), {'file': file})
+        response = client.get(reverse('view_my_pictures'))
+        self.assertEqual(len(response.context['my_pictures']) ,images_to_upload)
+
     def test_results_page_shows_image(self):
         client = Client()
         with open(TEST_IMAGES_DIR + "/image1.jpg", "rb") as file:

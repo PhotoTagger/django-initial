@@ -7,6 +7,7 @@ from django.contrib.auth.forms import UserCreationForm
 from PIL import Image
 from imageprocessor.tagservice.tagger import detect
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
 from rest_framework.views import APIView
@@ -128,17 +129,11 @@ def classify(request):
     if request.method == 'POST':
         image_count = len(request.FILES.getlist('file'))
         context['results'] = process_single_image(request) if image_count <= 1 else process_bulk_images(request)
-        for result in context['results']:
-            try:
-                if request.user.is_authenticated:
-                    new_photo = form.save(commit=False)
-                    new_photo.url = result['url']
-                    new_photo.user = request.user
-                    new_photo.save()
-                    new_photo.create_related_tags(result['tags'])
-            except Exception as e:
-                print(request.user)
-                print(e)
+        if request.user.is_authenticated:
+            for result in context['results']:
+                new_photo = Photo(url = result['url'], user = request.user, title = request.POST.get("title", "") )
+                new_photo.save()
+                new_photo.create_related_tags(result['tags'])
     return render(request, 'input.html', context)
 
 
@@ -155,11 +150,10 @@ def register(request):
     context['form'] = form
     return render(request, 'register.html', context)
 
+@login_required(login_url='/registration/login/')
 def view_my_pictures(request):
     context = {'my_pictures' : Photo.objects.filter(user = request.user)}
-    print(Photo.objects.filter(user = request.user).count())
     return render(request, 'view_my_pictures.html', context)
-
 
 class ClassifyAPI(APIView):
 
