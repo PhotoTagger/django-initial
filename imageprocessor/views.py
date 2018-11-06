@@ -130,7 +130,7 @@ def classify(request):
         context['results'] = process_single_image(request) if image_count <= 1 else process_bulk_images(request)
         for result in context['results']:
             try:
-                if request.user:
+                if request.user.is_authenticated:
                     new_photo = form.save(commit=False)
                     new_photo.url = result['url']
                     new_photo.user = request.user
