@@ -1,8 +1,7 @@
 from builtins import ValueError
 
-from django.test import TestCase, Client
+from django.test import TestCase
 from PIL import Image
-from django.urls import reverse
 import os
 
 from .tagger import detect
@@ -56,13 +55,6 @@ class TaggerTests(TestCase):
                 tags = detect(image)
                 print('Detection Complete for {}:\ntags:{}\n'.format(image_name, pretty_print_tags(tags)))
                 self.assertTrue(len(tags) >= 1)
-
-    def test_results_page_shows_image(self):
-        client = Client()
-        with open(TEST_IMAGES_DIR + "/image1.jpg", "rb") as file, open(TEST_IMAGES_DIR + "/image2.jpg", "rb") as file2:
-            response = client.post(reverse('classify'), { 'file' : [file, file2]})
-        self.assertIsNotNone(response.context['results'])
-
 
 # Helper Functions
 def open_image(image_name):

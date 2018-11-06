@@ -105,7 +105,8 @@ def process_bulk_images(request):
         current_res = upload_image_to_cloudinary(img, current_tag)
 
         res['tags'] = current_tag
-        res['url'] = current_res.get('url', '')
+        res['url'] = current_res.get('url', None)
+        res['public_id'] = current_res.get('public_id', None)
         results.append(res)
     return results
 
@@ -116,7 +117,8 @@ def process_single_image(request):
     response_data = upload_image_to_cloudinary(request.FILES.get('file'), generated_tags)
 
     data['tags'] = generated_tags or None
-    data['url'] = response_data.get('url', '') or None
+    data['url'] = response_data.get('url', None)
+    data['public_id'] = response_data.get('public_id', None)
 
     return [data]
 
@@ -161,6 +163,7 @@ class ClassifyAPI(APIView):
                 response_data['tags'] = tags
                 current_res = upload_image_to_cloudinary(image_file, tags)
                 response_data['url'] = current_res.get('url', None)
+                response_data['public_id'] = current_res.get('public_id', None)
                 return Response(response_data, status=status.HTTP_200_OK)
             except:
                 return Response(response_data, status=status.HTTP_202_ACCEPTED)
