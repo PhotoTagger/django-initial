@@ -1,6 +1,7 @@
 from builtins import ValueError
 
 from django.test import TestCase
+from django.test.client import Client
 from PIL import Image
 from django.urls import reverse
 from imageprocessor.tests import delete_test_images, TEST_IMAGES_DIR
