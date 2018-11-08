@@ -15,6 +15,7 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from django.shortcuts import render
+from django.conf import settings
 from .forms import ImageForm
 from .models import Photo, Tag
 
@@ -93,9 +94,9 @@ def upload_image_to_cloudinary(file, tags):
     return cloudinary.uploader.upload(
         file,
         use_filename=True,
-        tags=tags
+        tags=tags,
+        folder=settings.UPLOAD_FOLDER
     )
-
 
 def process_bulk_images(request):
     files = request.FILES.getlist('file')

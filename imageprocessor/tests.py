@@ -2,7 +2,7 @@ from django.test import TestCase, Client
 from django.contrib.auth.models import User
 from django.urls import reverse
 from rest_framework.test import APITestCase
-from .tagservice.test import TEST_IMAGES_DIR
+import cloudinary
 from PIL import Image
 
 import os
@@ -63,6 +63,8 @@ class ViewTests(TestCase):
                     client.post(reverse('classify'), {'file': file})
         response = client.get(reverse('view_my_pictures'))
         self.assertEqual(len(response.context['my_pictures']) ,images_to_upload)
+        for picture in response.context['my_pictures']:
+            self.assertTrue('dog' in picture.get_tags().values_list('tag', flat=True))
 
     def test_results_page_shows_image(self):
         client = Client()
@@ -93,6 +95,10 @@ class ViewTests(TestCase):
         self.assertTrue(response.status_code == 200)
         self.assertTrue(response.context['search_result'].get("total_count") >= 1)
 
+    #this cleans up the test images after the tests in this class are run
+    @classmethod
+    def tearDownClass(cls):
+        delete_test_images()
 
 class LoginTests(TestCase):
     def test_register_creates_new_user(self):
@@ -133,3 +139,12 @@ class ClassifyApiTests(APITestCase):
             response = self.client.post("/api/classify/", {'file': file}, format='multipart')
         self.assertEqual(response.status_code, 415)
         self.assertEqual(response.data, "We can't process that file type. Please submit a different file")
+
+    #this cleans up the test images after the tests in this class are run
+    @classmethod
+    def tearDownClass(cls):
+        delete_test_images()
+
+#helper function
+def delete_test_images():
+    cloudinary.api.delete_resources_by_prefix('TEST_IMAGES/')

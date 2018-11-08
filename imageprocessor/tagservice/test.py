@@ -3,11 +3,11 @@ from builtins import ValueError
 from django.test import TestCase, Client
 from PIL import Image
 from django.urls import reverse
+from imageprocessor.tests import delete_test_images, TEST_IMAGES_DIR
 import os
 
 from .tagger import detect
 
-TEST_IMAGES_DIR = 'imageprocessor/tagservice/test_images'
 
 
 class TaggerTests(TestCase):
@@ -62,6 +62,11 @@ class TaggerTests(TestCase):
         with open(TEST_IMAGES_DIR + "/image1.jpg", "rb") as file, open(TEST_IMAGES_DIR + "/image2.jpg", "rb") as file2:
             response = client.post(reverse('classify'), { 'file' : [file, file2]})
         self.assertIsNotNone(response.context['results'])
+
+    # this cleans up the test images after the tests in this class are run
+    @classmethod
+    def tearDownClass(cls):
+        delete_test_images()
 
 
 # Helper Functions

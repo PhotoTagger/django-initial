@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load cloudinary %}
 {% block body %}
 <style>
     h2 { margin: 20px; }
@@ -17,12 +18,14 @@
     <thead>
         <tr>
             <th>Photos</th>
+            <th>Tags</th>
         </tr>
     </thead>
     <tbody>
     {% for picture in my_pictures %}
         <tr>
-            <td>{% for tag in picture.get_tags %}<a href = "{{picture.url}}">{{tag}}</a> {% endfor %}</td>
+            <td>{% cloudinary picture.url type="fetch" %}</td>
+            <td>{% for tag in picture.get_tags %}{% if not forloop.first %}, {% endif %}{{tag}}{% endfor %}</td>
         </tr>
         {% endfor %}
     </tbody>

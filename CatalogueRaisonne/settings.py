@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 
 import os
 import dj_database_url
+import sys
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -134,3 +135,11 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'media')
 
 LOGIN_REDIRECT_URL = '/'
+
+#This part checks if the system is currently being tested
+#If so, it creates a variable representing the test folder
+#otherwise images just go in the root folder
+if 'manage.py' in sys.argv and 'test' in sys.argv:
+    UPLOAD_FOLDER='TEST_IMAGES'
+else:
+    UPLOAD_FOLDER=''
