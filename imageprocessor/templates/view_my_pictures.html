@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load cloudinary %}
+{% block body %}
+<style>
+    h2 { margin: 20px; }
+    a { display: block; margin: 20px; }
+
+</style>
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+{% endblock %}
+{% block javascript %}
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+{% endblock %}
+<div>
+    <h2>My Images</h2>
+    <table id="photo-table" class="display">
+    <thead>
+        <tr>
+            <th>Photos</th>
+            <th>Tags</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for picture in my_pictures %}
+        <tr>
+            <td>{% cloudinary picture.url type="fetch" %}</td>
+            <td>{% for tag in picture.get_tags %}{% if not forloop.first %}, {% endif %}{{tag}}{% endfor %}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+    <hr>
+    <a href = '{% url 'index' %}'>Home</a>
+</div>
+<script>
+$(document).ready( function () {
+    $('#photo-table').DataTable();
+} );
+    </script>
+{% endblock %}

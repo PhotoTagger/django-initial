@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 
 import os
 import dj_database_url
+import sys
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -25,7 +26,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'uzw$to=oz2l9$-ss+t7s71tol0x$l)x+)y$8&d0t9%pb156o25'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+
 
 
 ALLOWED_HOSTS = ['phototagger491.herokuapp.com', 'localhost', '127.0.0.1']
@@ -89,6 +90,9 @@ DATABASES = {
 
 if 'ON_HEROKU' in os.environ:
     DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
+    DEBUG = False
+else:
+    DEBUG = True
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
 
@@ -131,3 +135,11 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'media')
 
 LOGIN_REDIRECT_URL = '/'
+
+#This part checks if the system is currently being tested
+#If so, it creates a variable representing the test folder
+#otherwise images just go in the root folder
+if 'manage.py' in sys.argv and 'test' in sys.argv:
+    UPLOAD_FOLDER='TEST_IMAGES'
+else:
+    UPLOAD_FOLDER=''

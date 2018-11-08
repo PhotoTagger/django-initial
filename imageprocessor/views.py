@@ -7,6 +7,7 @@ from django.contrib.auth.forms import UserCreationForm
 from PIL import Image
 from imageprocessor.tagservice.tagger import detect
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
 from rest_framework.views import APIView
@@ -14,8 +15,9 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from django.shortcuts import render
+from django.conf import settings
 from .forms import ImageForm
-from .models import Photo
+from .models import Photo, Tag
 
 
 NO_TAGS_ERROR_MSG = "We couldn't generate tags for that image. Please try a different photo"
@@ -92,9 +94,9 @@ def upload_image_to_cloudinary(file, tags):
     return cloudinary.uploader.upload(
         file,
         use_filename=True,
-        tags=tags
+        tags=tags,
+        folder=settings.UPLOAD_FOLDER
     )
-
 
 def process_bulk_images(request):
     files = request.FILES.getlist('file')
@@ -125,12 +127,16 @@ def process_single_image(request):
 
 
 def classify(request):
-    context = {'form': ImageForm()}
-
+    form = ImageForm(request.POST or None, request.FILES or None)
+    context = {'form' :form }
     if request.method == 'POST':
         image_count = len(request.FILES.getlist('file'))
         context['results'] = process_single_image(request) if image_count <= 1 else process_bulk_images(request)
-
+        if request.user.is_authenticated:
+            for result in context['results']:
+                new_photo = Photo(url = result['url'], user = request.user, title = request.POST.get("title", "") )
+                new_photo.save()
+                new_photo.create_related_tags(result['tags'])
     return render(request, 'input.html', context)
 
 
@@ -147,6 +153,10 @@ def register(request):
     context['form'] = form
     return render(request, 'register.html', context)
 
+@login_required(login_url='/registration/login/')
+def view_my_pictures(request):
+    context = {'my_pictures' : Photo.objects.filter(user = request.user)}
+    return render(request, 'view_my_pictures.html', context)
 
 class ClassifyAPI(APIView):
 
