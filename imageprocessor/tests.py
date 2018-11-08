@@ -2,8 +2,11 @@ from django.test import TestCase, Client
 from django.contrib.auth.models import User
 from django.urls import reverse
 from rest_framework.test import APITestCase
+
 import cloudinary
 from PIL import Image
+
+import cloudinary
 
 import os
 import io
@@ -72,6 +75,7 @@ class ViewTests(TestCase):
             response = client.post(reverse('classify'), {'file': file})
         self.assertIsNotNone(response.context['results'][0]['url'])
         self.assertTrue('dog' in response.context['results'][0]['tags'])
+        cloudinary.uploader.destroy(response.context['results'][0]['public_id'], invalidate=True)
 
     def test_results_page_shows_image_should_error(self):
         client = Client()
@@ -79,6 +83,7 @@ class ViewTests(TestCase):
             response = client.post(reverse('classify'), {'file': blankImageFile})
         self.assertIsNotNone(response.context['results'][0]['url'])
         self.assertIsNone(response.context['results'][0]['tags'])
+        cloudinary.uploader.destroy(response.context['results'][0]['public_id'], invalidate=True)
 
     def test_results_page_shows_images(self):
         client = Client()
@@ -88,6 +93,9 @@ class ViewTests(TestCase):
         self.assertIsNotNone(response.context['results'][1]['url'])
         self.assertTrue('dog' in response.context['results'][0]['tags'])
         self.assertTrue(response.context['results'][1]['tags'] == [])
+        cloudinary.uploader.destroy(response.context['results'][0]['public_id'], invalidate=True)
+        cloudinary.uploader.destroy(response.context['results'][1]['public_id'], invalidate=True)
+
 
     def test_tag_search_post_request_works(self):
         client = Client()
@@ -127,6 +135,7 @@ class ClassifyApiTests(APITestCase):
         self.assertIn('cat', response.data['tags'])
         self.assertIn('dog', response.data['tags'])
         self.assertIsNotNone(response.data['url'])
+        cloudinary.uploader.destroy(response.data['public_id'], invalidate=True)
 
     def test_classify_api_no_content(self):
         with open(os.path.join(TEST_IMAGES_DIR,"image4_should_error.jpg"), "rb") as file:

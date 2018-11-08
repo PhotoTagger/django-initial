@@ -1,6 +1,6 @@
 from builtins import ValueError
 
-from django.test import TestCase, Client
+from django.test import TestCase
 from PIL import Image
 from django.urls import reverse
 from imageprocessor.tests import delete_test_images, TEST_IMAGES_DIR
@@ -57,6 +57,7 @@ class TaggerTests(TestCase):
                 print('Detection Complete for {}:\ntags:{}\n'.format(image_name, pretty_print_tags(tags)))
                 self.assertTrue(len(tags) >= 1)
 
+
     def test_results_page_shows_image(self):
         client = Client()
         with open(TEST_IMAGES_DIR + "/image1.jpg", "rb") as file, open(TEST_IMAGES_DIR + "/image2.jpg", "rb") as file2:
@@ -67,6 +68,7 @@ class TaggerTests(TestCase):
     @classmethod
     def tearDownClass(cls):
         delete_test_images()
+
 
 
 # Helper Functions
