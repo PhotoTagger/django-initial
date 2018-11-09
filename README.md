@@ -1,7 +1,7 @@
 # Photo Tagger - A Django Tensor Flow Project
 [![Build Status](https://travis-ci.org/PhotoTagger/django-initial.svg?branch=master)](https://travis-ci.org/PhotoTagger/django-initial) [![codecov](https://codecov.io/gh/PhotoTagger/django-initial/branch/master/graph/badge.svg)](https://codecov.io/gh/PhotoTagger/django-initial)
 
-Photo Tagger imbues your photo collection with the smarts of AI by automatically generating searchable tags based on the content of each image. Checkout the [Live Demo](https://phototagger491.herokuapp.com/).
+Photo Tagger imbues your photo collection with the smarts of AI by automatically generating searchable tags based on the content of each image. Checkout the <a href="https://phototagger491.herokuapp.com/" target="_blank">Live Demo</a>.
 
 # Setting up your environment
 
