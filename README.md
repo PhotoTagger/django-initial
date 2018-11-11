@@ -106,9 +106,9 @@ You can also try this API by using the postman app.
    * Repeat the previous 3 sub-steps for each image you want to include in your request.
    * Press the Send button
 
-A successful response from this API will have an overall HTTP status code of 207 (Multistatus) and the following JSON structure. Where "results" is an array holding the individual result of each image upload operation.
-"status" holds the HTTP status code associated with the individual image
-"url" is the location where the image was stored in the cloud and "public_id" is its resource id
+A successful response from this API will have an overall HTTP status code of 207 (Multistatus) and the following JSON structure. Where "results" is an array holding the individual result of each image upload operation.<br />
+"status" holds the HTTP status code associated with the individual image<br />
+"url" is the location where the image was stored in the cloud and "public_id" is its resource id<br />
 "tags" is an array of tags generated for the image.
 ```JSON
 {
