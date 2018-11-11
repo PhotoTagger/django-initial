@@ -22,6 +22,7 @@ from .models import Photo, Tag
 
 NO_TAGS_ERROR_MSG = "We couldn't generate tags for that image. Please try a different photo"
 BAD_FILE_ERROR_MSG = "We can't process that file type. Please submit a different file"
+CLOUDINARY_ERROR = "We were able to generate tags for the image, but an error occured while attempting to save the image on our end"
 
 
 # Create your views here.
@@ -161,26 +162,47 @@ def view_my_pictures(request):
 class ClassifyAPI(APIView):
 
     def post(self, request, format=None):
-        response_data = {
-            'url' : None,
-            'tags' : []
-        }      
-        try:
-            image_file = request.FILES['file']
-            image = Image.open(image_file)
-            tags = detect(image) 
-            try:
-                response_data['tags'] = tags
-                current_res = upload_image_to_cloudinary(image_file, tags)
-                response_data['url'] = current_res.get('url', None)
-                response_data['public_id'] = current_res.get('public_id', None)
-                return Response(response_data, status=status.HTTP_200_OK)
-            except:
-                return Response(response_data, status=status.HTTP_202_ACCEPTED)
-            return Response(NO_TAGS_ERROR_MSG, status=status.HTTP_204_NO_CONTENT)
-        except ValueError:
-            return Response(NO_TAGS_ERROR_MSG, status=status.HTTP_204_NO_CONTENT)
-        except OSError:
-            return Response(BAD_FILE_ERROR_MSG, status=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
-        except:
+        response_data = { 'results': None }    
+        results = []
+        
+        image_files = request.FILES.getlist('file')
+        if len(image_files) < 1:
             return Response(status=status.HTTP_400_BAD_REQUEST)
+        else:
+            for image_file in image_files:
+                result = {
+                    'status': None,
+                    'error_message': None,
+                    'name': image_file.name,
+                    'public_id': None,
+                    'url' : None,
+                    'tags' : []
+                }
+                try:
+                    image = Image.open(image_file)
+                    tags = detect(image)
+                    result['tags'] = tags
+                    try:
+                        current_res = upload_image_to_cloudinary(image_file, tags)
+                        result['url'] = current_res.get('url', None)
+                        result['public_id'] = current_res.get('public_id', None)
+                        result['status'] = status.HTTP_200_OK
+                    except:
+                        result['status'] = status.HTTP_202_ACCEPTED
+                        result['error_message'] = CLOUDINARY_ERROR
+                except ValueError:
+                    result['status'] = status.HTTP_204_NO_CONTENT
+                    result['error_message'] = NO_TAGS_ERROR_MSG
+                except OSError:
+                    result['status'] = status.HTTP_415_UNSUPPORTED_MEDIA_TYPE
+                    result['error_message'] = BAD_FILE_ERROR_MSG
+                except:
+                    result['status'] = status.HTTP_400_BAD_REQUEST
+                
+                results.append(result)
+            
+            response_data['results'] = results
+            return Response(data=response_data, status=status.HTTP_207_MULTI_STATUS)
+            
+
+
