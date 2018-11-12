@@ -96,8 +96,7 @@ def upload_image_to_cloudinary(file, tags):
         file,
         use_filename=True,
         tags=tags,
-        folder=settings.UPLOAD_FOLDER
-        )
+        folder=settings.UPLOAD_FOLDER)
 
     #etag is unique identifier for picture
     etag = result.get('etag', None)
