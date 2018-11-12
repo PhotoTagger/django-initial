@@ -91,13 +91,36 @@ def get_tags_for_image(request, img):
 
 def upload_image_to_cloudinary(file, tags):
     file.seek(0)
-
-    return cloudinary.uploader.upload(
+    
+    result = cloudinary.uploader.upload(
         file,
         use_filename=True,
         tags=tags,
         folder=settings.UPLOAD_FOLDER
-    )
+        )
+
+    #etag is unique identifier for picture
+    etag = result.get('etag', None)
+    try:
+        # if it is the first time we uploaded image onto database, then we will rename public_ic with etag
+        cloudinary.uploader.rename(result.get('public_id'), etag)
+    except:
+        # Exception will occur when same image is posted twice
+        # Thus we will delete the uploaded image in the database
+        cloudinary.api.delete_resources([result.get('public_id', None)])
+
+    query = 'resource_type:image AND public_id='
+    # We need to ensure that the database gets populated with the original photo, not the photo that was originally posted
+    # This is because photo originally posted was deleted
+    search_query = cloudinary.Search() \
+            .expression(query + etag) \
+            .execute()
+    if (len(search_query["resources"]) > 0):
+        search_query['url'] = search_query["resources"][0]['url']
+        search_query['public_id'] = search_query["resources"][0]['public_id']
+        return search_query
+    else:
+        return result
 
 def process_bulk_images(request):
     files = request.FILES.getlist('file')

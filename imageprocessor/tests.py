@@ -104,6 +104,18 @@ class ViewTests(TestCase):
         self.assertTrue(response.status_code == 200)
         self.assertTrue(response.context['search_result'].get("total_count") >= 1)
 
+    def post_same_image_with_different_name(self):
+        # this test is so that when you add two images with similar names, only one of them is added
+        client = Client()
+        with open(TEST_IMAGES_DIR + "/image_5.jpg", "rb") as file1, open(TEST_IMAGES_DIR + "/same_as_image_5.jpg", "rb") as file2:
+            response = client.post(reverse('classify'), {'file': [file1, file2]})
+        query = 'resource_type:image AND etag=fce00b1df488c389916f9994a23fca10'
+        search_query_result = cloudinary.Search() \
+                            .expression(query) \
+                            .execute()
+        self.assertEqual(search_query_result["total_count"], 1)
+        cloudinary.api.delete_resources(['fce00b1df488c389916f9994a23fca10'])
+
     #this cleans up the test images after the tests in this class are run
     @classmethod
     def tearDownClass(cls):
