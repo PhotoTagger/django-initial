@@ -76,7 +76,6 @@ class ViewTests(TestCase):
             response = client.post(reverse('classify'), {'file': file})
         self.assertIsNotNone(response.context['results'][0]['url'])
         self.assertTrue('dog' in response.context['results'][0]['tags'])
-        cloudinary.uploader.destroy(response.context['results'][0]['public_id'], invalidate=True)
 
     def test_results_page_shows_image_should_error(self):
         client = Client()
@@ -84,7 +83,6 @@ class ViewTests(TestCase):
             response = client.post(reverse('classify'), {'file': blankImageFile})
         self.assertIsNotNone(response.context['results'][0]['url'])
         self.assertIsNone(response.context['results'][0]['tags'])
-        cloudinary.uploader.destroy(response.context['results'][0]['public_id'], invalidate=True)
 
     def test_results_page_shows_images(self):
         client = Client()
@@ -94,9 +92,6 @@ class ViewTests(TestCase):
         self.assertIsNotNone(response.context['results'][1]['url'])
         self.assertTrue('dog' in response.context['results'][0]['tags'])
         self.assertTrue(response.context['results'][1]['tags'] == [])
-        cloudinary.uploader.destroy(response.context['results'][0]['public_id'], invalidate=True)
-        cloudinary.uploader.destroy(response.context['results'][1]['public_id'], invalidate=True)
-
 
     def test_tag_search_post_request_works(self):
         client = Client()
@@ -141,7 +136,6 @@ class ClassifyApiTests(APITestCase):
         self.assertIsNotNone(result['public_id'])
         self.assertIn('cat', result['tags'])
         self.assertIn('dog', result['tags'])
-        cloudinary.uploader.destroy(result['public_id'], invalidate=True)
 
     def test_classify_api_muliple_images(self):
         with open(os.path.join(TEST_IMAGES_DIR,"image3.jpg"), "rb") as file1, open(os.path.join(TEST_IMAGES_DIR,"image2.jpg"), "rb") as file2:
@@ -156,7 +150,6 @@ class ClassifyApiTests(APITestCase):
         self.assertIsNotNone(result['public_id'])
         self.assertIn('cat', result['tags'])
         self.assertIn('dog', result['tags'])
-        cloudinary.uploader.destroy(result['public_id'], invalidate=True)
 
         result = response.data['results'][1]
         self.assertEqual(result['status'], 200)
@@ -166,7 +159,6 @@ class ClassifyApiTests(APITestCase):
         self.assertIsNotNone(result['public_id'])
         self.assertIn('kite', result['tags'])
         self.assertIn('person', result['tags'])
-        cloudinary.uploader.destroy(result['public_id'], invalidate=True)
 
     def test_classify_api_no_content(self):
         with open(os.path.join(TEST_IMAGES_DIR,"image4_should_error.jpg"), "rb") as file:
