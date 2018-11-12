@@ -17,5 +17,4 @@ notifications:
 script:
 - coverage run --source='.' manage.py test
 after_success:
-- coveralls
 - codecov
