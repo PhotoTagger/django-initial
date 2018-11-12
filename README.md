@@ -87,10 +87,11 @@ coverage report -m
 # API
 
 ### /api/classify/
+This API accepts one or more images and returns a list of tags for each image.
 
 You can try the API by using this curl command.
 ```bash
-curl -F "file=@[FULL PATH TO IMAGE FILE]" http://127.0.0.1:8000/api/classify/
+curl -F "file=@[FULL PATH TO IMAGE FILE1]" -F "file=@[FULL PATH TO IMAGE FILE2]" http://127.0.0.1:8000/api/classify/
 ```
 
 You can also try this API by using the postman app.
@@ -101,16 +102,36 @@ You can also try this API by using the postman app.
    * Type "file" in the key field without the quotes.
    * Change the type from text to file.
    * Click the Choose Files button under value and select the image you want to tag.
+   * Repeat the previous 3 sub-steps for each image you want to include in your request.
    * Press the Send button
 
-Successful responses from this API will have the following JSON structure. Where "url" is the location where the image was stored in the cloud and "tags" is an array of tags generated for the image.
+A successful response from this API will have an overall HTTP status code of 207 (Multistatus) and the following JSON structure. Where "results" is an array holding the individual result of each image upload operation.<br />
+"status" holds the HTTP status code associated with the individual image<br />
+"url" is the location where the image was stored in the cloud and "public_id" is its resource id<br />
+"tags" is an array of tags generated for the image.
 ```JSON
 {
-    "url": "http://res.cloudinary.com/yourimage.jpg",
-    "tags": [
-        "tagA",
-        "tagB",
-        "tagC"
+    "results": [
+        {
+            "status": 200,
+            "error_message": null,
+            "name": "yourimage.jpg",
+            "public_id": "yourimage_abcd",
+            "url": "http://res.cloudinary.com/yourimage_abcd.jpg",
+            "tags": [
+                "tagA",
+                "tagB",
+                "tagC"
+            ]
+        },
+        {
+            "status": 415,
+            "error_message": "We can't process that file type. Please submit a different file",
+            "name": "text_file.txt",
+            "public_id": null,
+            "url": null,
+            "tags": []
+        }
     ]
 }
 ```

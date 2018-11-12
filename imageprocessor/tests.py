@@ -2,6 +2,7 @@ from django.test import TestCase, Client
 from django.contrib.auth.models import User
 from django.urls import reverse
 from rest_framework.test import APITestCase
+from .views import NO_TAGS_ERROR_MSG, BAD_FILE_ERROR_MSG, CLOUDINARY_ERROR
 
 import cloudinary
 from PIL import Image
@@ -130,24 +131,66 @@ class ClassifyApiTests(APITestCase):
 
     def test_classify_api_cat_and_dog(self):
         with open(os.path.join(TEST_IMAGES_DIR,"image3.jpg"), "rb") as file:
-            response = self.client.post("/api/classify/", {'file': file}, format='multipart')
-        self.assertEqual(response.status_code, 200)
-        self.assertIn('cat', response.data['tags'])
-        self.assertIn('dog', response.data['tags'])
-        self.assertIsNotNone(response.data['url'])
-        cloudinary.uploader.destroy(response.data['public_id'], invalidate=True)
+            response = self.client.post("/api/classify/", {'file': file}, format='multipart')   
+        self.assertEqual(response.status_code, 207)
+        result = response.data['results'][0]
+        self.assertEqual(result['status'], 200)
+        self.assertIsNone(result['error_message'])
+        self.assertEqual(result['name'], 'image3.jpg')
+        self.assertIsNotNone(result['url'])
+        self.assertIsNotNone(result['public_id'])
+        self.assertIn('cat', result['tags'])
+        self.assertIn('dog', result['tags'])
+        cloudinary.uploader.destroy(result['public_id'], invalidate=True)
+
+    def test_classify_api_muliple_images(self):
+        with open(os.path.join(TEST_IMAGES_DIR,"image3.jpg"), "rb") as file1, open(os.path.join(TEST_IMAGES_DIR,"image2.jpg"), "rb") as file2:
+            response = self.client.post("/api/classify/", {'file': [file1, file2]}, format='multipart')
+        self.assertEqual(response.status_code, 207)
+        
+        result = response.data['results'][0]
+        self.assertEqual(result['status'], 200)
+        self.assertIsNone(result['error_message'])
+        self.assertEqual(result['name'], 'image3.jpg')
+        self.assertIsNotNone(result['url'])
+        self.assertIsNotNone(result['public_id'])
+        self.assertIn('cat', result['tags'])
+        self.assertIn('dog', result['tags'])
+        cloudinary.uploader.destroy(result['public_id'], invalidate=True)
+
+        result = response.data['results'][1]
+        self.assertEqual(result['status'], 200)
+        self.assertIsNone(result['error_message'])
+        self.assertEqual(result['name'], 'image2.jpg')
+        self.assertIsNotNone(result['url'])
+        self.assertIsNotNone(result['public_id'])
+        self.assertIn('kite', result['tags'])
+        self.assertIn('person', result['tags'])
+        cloudinary.uploader.destroy(result['public_id'], invalidate=True)
 
     def test_classify_api_no_content(self):
         with open(os.path.join(TEST_IMAGES_DIR,"image4_should_error.jpg"), "rb") as file:
             response = self.client.post("/api/classify/", {'file': file}, format='multipart')
-        self.assertEqual(response.status_code, 204)
-        self.assertEqual(response.data, "We couldn't generate tags for that image. Please try a different photo")
+        self.assertEqual(response.status_code, 207)
+        result = response.data['results'][0]
+        self.assertEqual(result['status'], 204)
+        self.assertEqual(result['error_message'], NO_TAGS_ERROR_MSG)
+        self.assertEqual(result['name'], 'image4_should_error.jpg')
+        self.assertIsNone(result['public_id'])
+        self.assertIsNone(result['url'])
+        self.assertFalse(result['tags'])
 
     def test_classify_api_unsupported_media(self):
         with io.StringIO("This is not a file") as file:
             response = self.client.post("/api/classify/", {'file': file}, format='multipart')
-        self.assertEqual(response.status_code, 415)
-        self.assertEqual(response.data, "We can't process that file type. Please submit a different file")
+        self.assertEqual(response.status_code, 207)
+        result = response.data['results'][0]
+        self.assertEqual(result['status'], 415)
+        self.assertEqual(result['error_message'], BAD_FILE_ERROR_MSG)
+        self.assertEqual(result['name'], 'file')
+        self.assertIsNone(result['public_id'])
+        self.assertIsNone(result['url'])
+        self.assertFalse(result['tags'])
 
     #this cleans up the test images after the tests in this class are run
     @classmethod
