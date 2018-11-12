@@ -117,6 +117,7 @@ def upload_image_to_cloudinary(file, tags):
     if (len(search_query["resources"]) > 0):
         search_query['url'] = search_query["resources"][0]['url']
         search_query['public_id'] = search_query["resources"][0]['public_id']
+        search_query['etag'] = result['etag']
         return search_query
     else:
         return result

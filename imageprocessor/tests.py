@@ -108,10 +108,10 @@ class ViewTests(TestCase):
         client = Client()
         with open(TEST_IMAGES_DIR + "/image5.jpg", "rb") as file1, open(TEST_IMAGES_DIR + "/same_as_image5.jpg", "rb") as file2:
             response = client.post(reverse('classify'), {'file': [file1, file2]})
-        query = 'resource_type:image AND public_id=fce00b1df488c389916f9994a23fca10'
+        query = 'resource_type:image AND public_id=' + 'a2324d47504d07607aaae43d7be708c0'
         search_query_result = cloudinary.Search().expression(query).execute()
+        print(search_query_result["total_count"])
         self.assertEqual(search_query_result["total_count"], 1)
-        cloudinary.api.delete_resources(['fce00b1df488c389916f9994a23fca10'])
 
     #this cleans up the test images after the tests in this class are run
     @classmethod
