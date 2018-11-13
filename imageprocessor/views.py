@@ -102,7 +102,7 @@ def upload_image_to_cloudinary(file, tags):
     etag = result.get('etag', None)
     try:
         # if it is the first time we uploaded image onto database, then we will rename public_ic with etag
-        cloudinary.uploader.rename(result.get('public_id'), etag)
+        result = cloudinary.uploader.rename(result.get('public_id'), etag)
     except:
         # Exception will occur when same image is posted twice
         # Thus we will delete the uploaded image in the database
