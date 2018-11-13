@@ -1,8 +1,10 @@
+{% extends "base.html" %}
+{% block body %}
 {% load crispy_forms_tags %}
 <style>
     a { padding: 20px; }
 </style>
-<div class ="row">
+<div class ="row" style="margin:20px;">
     <div class = "col-sm-3 col-sm-offset-4">
         <div class="panel panel-primary login">
             <div class="panel-heading">
@@ -12,8 +14,7 @@
                 <form method="post">
                     {% csrf_token %}
                     {{ form | crispy }}
-                    <div class="col-sm-12 text-center">
-                        <button id="submit" class="btn btn-primary btn-lg" type="submit">Submit</button>
+                    <input type="submit" value="Submit" style="margin-top:20px;">
                 </form>
             </div>
             <div>
@@ -23,3 +24,4 @@
         </div>
     </div>
 </div>
+{% endblock %}
