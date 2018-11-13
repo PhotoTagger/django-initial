@@ -12,26 +12,41 @@
       <div class="container">
         <div class="row">
           <div class="col-lg-3">
-              <a href = '{% url 'classify' %}' style="text-decoration: none !important;"><h3><span><img src="{% static 'img/cloud-upload.png' %}" width="100" height="100" alt=""></span> <br>Image Classifier</h3>
-              <p class="lead mb-0">Upload multiple images to generate tags! <span class="glyphicon glyphicon-search"></span></p></a>
+              <a href = '{% url 'classify' %}'>
+					<img src="{% static 'img/cloud-upload.png' %}" width="100" height="100" alt="">
+					<h3>Image Classifier</h3>
+					<p class="lead mb-0">Upload multiple images to generate tags!</p>
+			  </a>
           </div>
           <div class="col-lg-3">
-              <a href = '{% url 'tagsearch' %}' style="text-decoration: none !important;"><h3><span><img src="{% static 'img/image-search.png' %}" width="100" height="100" alt=""></span><br>Tag Searcher</h3>
-              <p class="lead mb-0">Search for images via tags!</p></a>
+              <a href = '{% url 'tagsearch' %}'>
+					<img src="{% static 'img/image-search.png' %}" width="100" height="100" alt="">
+					<h3>Tag Searcher</h3>
+					<p class="lead mb-0">Search for images via tags!</p>
+			  </a>
           </div>
 		  {% if user.is_authenticated %}
 		  <div class="col-lg-3">
-              <a href = '{% url 'view_my_pictures' %}' style="text-decoration: none !important;"><h3><span><img src="{% static 'img/photo-camera.png' %}" width="100" height="100" alt=""></span><br>View Pictures</h3>
-              <p class="lead mb-0">Access pictures uploaded by you!</p></a>
+              <a href = '{% url 'view_my_pictures' %}'>
+					<img src="{% static 'img/photo-camera.png' %}" width="100" height="100" alt="">
+					<h3>View Pictures</h3>
+					<p class="lead mb-0">Access pictures uploaded by you!</p>
+			  </a>
           </div>
 		  {% else %}
           <div class="col-lg-3">
-              <a href = '{% url 'login' %}' style="text-decoration: none !important;"><h3><span><img src="{% static 'img/login.png' %}" width="100" height="100" alt=""></span><br>Login</h3>
-              <p class="lead mb-0">Login to your account!</p></a>
+              <a href = '{% url 'login' %}'>
+					<img src="{% static 'img/login.png' %}" width="100" height="100" alt="">
+					<h3>Login</h3>
+					<p class="lead mb-0">Login to your account!</p>
+			  </a>
           </div>
 		  <div class="col-lg-3">
-              <a href = '{% url 'register' %}' style="text-decoration: none !important;"><h3><span><img src="{% static 'img/register.png' %}" width="100" height="100" alt=""></span><br>Register</h3>
-              <p class="lead mb-0">Create a new account!</p></a>
+              <a href = '{% url 'register' %}'>
+					<img src="{% static 'img/register.png' %}" width="100" height="100" alt="">
+					<h3>Register</h3>
+					<p class="lead mb-0">Create a new account!</p>
+			  </a>
           </div>
 		  {% endif%}
         </div>
