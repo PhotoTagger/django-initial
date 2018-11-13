@@ -59,7 +59,7 @@ class TaggerTests(TestCase):
 
     # this cleans up the test images after the tests in this class are run
     @classmethod
-    def tear_down_class(cls):
+    def tearDownClass(cls):
         delete_test_images()
 
 

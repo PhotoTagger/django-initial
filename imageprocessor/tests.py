@@ -121,7 +121,7 @@ class ViewTests(TestCase):
         self.assertEqual(original_image_result["total_count"], 1)
 
     @classmethod
-    def tear_down_class(cls):
+    def tearDownClass(cls):
         delete_test_images()
 
 
@@ -208,7 +208,7 @@ class ClassifyApiTests(APITestCase):
 
     # this cleans up the test images after the tests in this class are run
     @classmethod
-    def tear_down_class(cls):
+    def tearDownClass(cls):
         delete_test_images()
 
 
