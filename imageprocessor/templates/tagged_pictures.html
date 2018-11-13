@@ -7,7 +7,7 @@
 	<p>We found {{ search_result.total_count }} matching images</p>
 	<div>
 		{% for url in images %}
-			<p>{% cloudinary url type="fetch" %}</p>
+			<p>{% cloudinary url width=600 height=600 crop="fit" type="fetch" %}</p>
 		{% endfor %}
 	</div>
 	{% endif %}

@@ -101,9 +101,10 @@ class ViewTests(TestCase):
 
     def test_post_same_image_with_different_name(self):
         client = Client()
-        with open(TEST_IMAGES_DIR + "/image5.jpg", "rb") as file1, open(TEST_IMAGES_DIR + "/same_as_image5.jpg", "rb") as file2:
+        with open(TEST_IMAGES_DIR + "/image5.jpg", "rb") as file1, open(TEST_IMAGES_DIR + "/image5.jpg", "rb") as file2:
             response = client.post(reverse('classify'), {'file': [file1, file2]})
-        query = 'resource_type:image AND public_id=' + 'a2324d47504d07607aaae43d7be708c0'
+
+        query = 'public_id=' + response.context['results'][0]['public_id']
         search_query_result = cloudinary.Search().expression(query).execute()
         print(search_query_result["total_count"])
         self.assertEqual(search_query_result["total_count"], 1)

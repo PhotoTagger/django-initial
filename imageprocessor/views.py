@@ -6,7 +6,6 @@ import cloudinary
 from django.contrib.auth.forms import UserCreationForm
 from PIL import Image
 from imageprocessor.tagservice.tagger import detect
-from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
@@ -34,12 +33,10 @@ def tag_search(request):
     context = {}
     if request.method == 'POST':
         search_query = request.POST["tagsearch"]
-        search = 'resource_type:image AND tags=' + search_query
 
         result = cloudinary.Search() \
-                .expression(search) \
+                .expression(f'tags={search_query}') \
                 .with_field('tags') \
-                .max_results('10') \
                 .execute()
 
         images = []
@@ -94,32 +91,30 @@ def upload_image_to_cloudinary(file, tags):
     
     result = cloudinary.uploader.upload(
         file,
-        use_filename=True,
         tags=tags,
         folder=settings.UPLOAD_FOLDER)
 
     #etag is unique identifier for picture
     etag = result.get('etag', None)
+
     try:
         # if it is the first time we uploaded image onto database, then we will rename public_ic with etag
         result = cloudinary.uploader.rename(result.get('public_id'), etag)
+        # if there's no duplicate images, its safe to return the original image data
+        return result
     except:
-        # Exception will occur when same image is posted twice
+        # Exception will occur when trying to rename more than one photo
         # Thus we will delete the uploaded image in the database
         cloudinary.api.delete_resources([result.get('public_id', None)])
 
-    query = 'resource_type:image AND public_id='
-    # We need to ensure that the database gets populated with the original photo, not the photo that was originally posted
-    # This is because photo originally posted was deleted
-    search_query = cloudinary.Search() \
-            .expression(query + etag) \
+        # We need to find the original photo, not the photo that was originally posted
+        # This is because photo originally posted was deleted
+        original_photo = cloudinary.Search() \
+            .expression(f'public_id={etag}') \
             .execute()
-    if (len(search_query["resources"]) > 0):
-        search_query['url'] = search_query["resources"][0]['url']
-        search_query['public_id'] = search_query["resources"][0]['public_id']
-        search_query['etag'] = result['etag']
-        return search_query
-    else:
+
+        result['url'] = original_photo["resources"][0]['url']
+        result['public_id'] = original_photo["resources"][0]['public_id']
         return result
 
 def process_bulk_images(request):
@@ -147,7 +142,6 @@ def process_single_image(request):
     data['public_id'] = response_data.get('public_id', None)
 
     return [data]
-
 
 
 def classify(request):
@@ -226,6 +220,3 @@ class ClassifyAPI(APIView):
             
             response_data['results'] = results
             return Response(data=response_data, status=status.HTTP_207_MULTI_STATUS)
-            
-
-

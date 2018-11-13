@@ -31,7 +31,7 @@
       <p>tags: {{ img_data.tags}}</p>
       {% endif %}
       <div class="image">
-        {% cloudinary img_data.url type="fetch" %}
+        {% cloudinary img_data.url width=600 height=600 crop="fit" type="fetch" %}
       </div>
       {% endfor %}
     </div>
