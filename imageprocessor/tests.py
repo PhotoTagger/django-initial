@@ -99,20 +99,31 @@ class ViewTests(TestCase):
         self.assertTrue(response.status_code == 200)
         self.assertTrue(response.context['search_result'].get("total_count") >= 1)
 
-    def test_post_same_image_with_different_name(self):
+    def test_post_same_image_with_different_name_twice(self):
+        client = Client()
+        with open(TEST_IMAGES_DIR + "/image5.jpg", "rb") as file1:
+            response1 = client.post(reverse('classify'), {'file': [file1]})
+
+        with open(TEST_IMAGES_DIR + "/image5.jpg", "rb") as file2:
+            response2 = client.post(reverse('classify'), {'file': [file2]})
+
+        query_for_image = 'public_id=' + response1.context['results'][0]['public_id']
+        original_image_result = cloudinary.Search().expression(query_for_image).execute()
+        self.assertEqual(original_image_result["total_count"], 1)
+
+    def test_bulk_post_same_image_with_different_name(self):
         client = Client()
         with open(TEST_IMAGES_DIR + "/image5.jpg", "rb") as file1, open(TEST_IMAGES_DIR + "/image5.jpg", "rb") as file2:
             response = client.post(reverse('classify'), {'file': [file1, file2]})
 
-        query = 'public_id=' + response.context['results'][0]['public_id']
-        search_query_result = cloudinary.Search().expression(query).execute()
-        print(search_query_result["total_count"])
-        self.assertEqual(search_query_result["total_count"], 1)
+        query_for_image = 'public_id=' + response.context['results'][0]['public_id']
+        original_image_result = cloudinary.Search().expression(query_for_image).execute()
+        self.assertEqual(original_image_result["total_count"], 1)
 
-    #this cleans up the test images after the tests in this class are run
     @classmethod
-    def tearDownClass(cls):
+    def tear_down_class(cls):
         delete_test_images()
+
 
 class LoginTests(TestCase):
     def test_register_creates_new_user(self):
@@ -128,6 +139,7 @@ class LoginTests(TestCase):
         response = client.post(reverse('register'),{'username': "TestUser1", 'password1': "testpassword1", 'password2': "testpassword1"})
         self.assertTrue(client.login(username="TestUser1", password="testpassword1"))
 
+
 class ClassifyApiTests(APITestCase):
 
     def test_classify_api_no_image(self):
@@ -136,7 +148,7 @@ class ClassifyApiTests(APITestCase):
 
     def test_classify_api_cat_and_dog(self):
         with open(os.path.join(TEST_IMAGES_DIR,"image3.jpg"), "rb") as file:
-            response = self.client.post("/api/classify/", {'file': file}, format='multipart')   
+            response = self.client.post("/api/classify/", {'file': file}, format='multipart')
         self.assertEqual(response.status_code, 207)
         result = response.data['results'][0]
         self.assertEqual(result['status'], 200)
@@ -151,7 +163,7 @@ class ClassifyApiTests(APITestCase):
         with open(os.path.join(TEST_IMAGES_DIR,"image3.jpg"), "rb") as file1, open(os.path.join(TEST_IMAGES_DIR,"image2.jpg"), "rb") as file2:
             response = self.client.post("/api/classify/", {'file': [file1, file2]}, format='multipart')
         self.assertEqual(response.status_code, 207)
-        
+
         result = response.data['results'][0]
         self.assertEqual(result['status'], 200)
         self.assertIsNone(result['error_message'])
@@ -194,11 +206,12 @@ class ClassifyApiTests(APITestCase):
         self.assertIsNone(result['url'])
         self.assertFalse(result['tags'])
 
-    #this cleans up the test images after the tests in this class are run
+    # this cleans up the test images after the tests in this class are run
     @classmethod
-    def tearDownClass(cls):
+    def tear_down_class(cls):
         delete_test_images()
 
-#helper function
+
+# helper function
 def delete_test_images():
     cloudinary.api.delete_resources_by_prefix('TEST_IMAGES/')

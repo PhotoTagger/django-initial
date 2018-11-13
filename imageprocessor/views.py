@@ -3,6 +3,7 @@ from builtins import OSError, ValueError, len
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 import cloudinary
+from cloudinary import api  # Only required for catching api errors
 from django.contrib.auth.forms import UserCreationForm
 from PIL import Image
 from imageprocessor.tagservice.tagger import detect
@@ -88,7 +89,7 @@ def get_tags_for_image(request, img):
 
 def upload_image_to_cloudinary(file, tags):
     file.seek(0)
-    
+
     result = cloudinary.uploader.upload(
         file,
         tags=tags,
@@ -99,10 +100,9 @@ def upload_image_to_cloudinary(file, tags):
 
     try:
         # if it is the first time we uploaded image onto database, then we will rename public_ic with etag
-        result = cloudinary.uploader.rename(result.get('public_id'), etag)
-        # if there's no duplicate images, its safe to return the original image data
-        return result
-    except:
+        new_file_name = settings.UPLOAD_FOLDER + "/" + etag
+        result = cloudinary.uploader.rename(result.get('public_id'), new_file_name)
+    except api.Error:
         # Exception will occur when trying to rename more than one photo
         # Thus we will delete the uploaded image in the database
         cloudinary.api.delete_resources([result.get('public_id', None)])
@@ -113,9 +113,12 @@ def upload_image_to_cloudinary(file, tags):
             .expression(f'public_id={etag}') \
             .execute()
 
-        result['url'] = original_photo["resources"][0]['url']
-        result['public_id'] = original_photo["resources"][0]['public_id']
+        if original_photo['total_count'] > 0:
+            result['url'] = original_photo["resources"][0]['url']
+            result['public_id'] = original_photo["resources"][0]['public_id']
+
         return result
+    return result
 
 def process_bulk_images(request):
     files = request.FILES.getlist('file')
@@ -204,7 +207,7 @@ class ClassifyAPI(APIView):
                         result['url'] = current_res.get('url', None)
                         result['public_id'] = current_res.get('public_id', None)
                         result['status'] = status.HTTP_200_OK
-                    except:
+                    except api.Error:
                         result['status'] = status.HTTP_202_ACCEPTED
                         result['error_message'] = CLOUDINARY_ERROR
                 except ValueError:

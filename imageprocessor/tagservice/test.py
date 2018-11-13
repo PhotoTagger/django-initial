@@ -10,7 +10,6 @@ import os
 from .tagger import detect
 
 
-
 class TaggerTests(TestCase):
 
     def test_tagger_initialized_successfully(self):
@@ -58,18 +57,10 @@ class TaggerTests(TestCase):
                 print('Detection Complete for {}:\ntags:{}\n'.format(image_name, pretty_print_tags(tags)))
                 self.assertTrue(len(tags) >= 1)
 
-
-    def test_results_page_shows_image(self):
-        client = Client()
-        with open(TEST_IMAGES_DIR + "/image1.jpg", "rb") as file, open(TEST_IMAGES_DIR + "/image2.jpg", "rb") as file2:
-            response = client.post(reverse('classify'), { 'file' : [file, file2]})
-        self.assertIsNotNone(response.context['results'])
-
     # this cleans up the test images after the tests in this class are run
     @classmethod
-    def tearDownClass(cls):
+    def tear_down_class(cls):
         delete_test_images()
-
 
 
 # Helper Functions
