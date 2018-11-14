@@ -12,14 +12,14 @@
         <div class="row">
           <div class="col-lg-3">
               <a href = '{% url 'classify' %}'>
-					<img src="https://image.ibb.co/mMw09f/cloud-upload.png" width="100" height="100" alt="">
+					<img src="https://image.ibb.co/mMw09f/cloud-upload.png" onerror='this.style.display = "none"' width="100" height="100" alt="">
 					<h3>Image Classifier</h3>
 					<p class="lead mb-0">Upload multiple images to generate tags!</p>
 			  </a>
           </div>
           <div class="col-lg-3">
               <a href = '{% url 'tagsearch' %}'>
-					<img src="https://image.ibb.co/cf9npf/image-search.png" width="100" height="100" alt="">
+					<img src="https://image.ibb.co/cf9npf/image-search.png" onerror='this.style.display = "none"' width="100" height="100" alt="">
 					<h3>Tag Searcher</h3>
 					<p class="lead mb-0">Search for images via tags!</p>
 			  </a>
@@ -27,7 +27,7 @@
 		  {% if user.is_authenticated %}
 		  <div class="col-lg-3">
               <a href = '{% url 'view_my_pictures' %}'>
-					<img src="https://image.ibb.co/hHoK20/photo-camera.png" width="100" height="100" alt="">
+					<img src="https://image.ibb.co/hHoK20/photo-camera.png" onerror='this.style.display = "none"' width="100" height="100" alt="">
 					<h3>View Pictures</h3>
 					<p class="lead mb-0">Access pictures uploaded by you!</p>
 			  </a>
@@ -35,14 +35,14 @@
 		  {% else %}
           <div class="col-lg-3">
               <a href = '{% url 'login' %}'>
-					<img src="https://image.ibb.co/hdSOUf/login.png" width="100" height="100" alt="">
+					<img src="https://image.ibb.co/hdSOUf/login.png" onerror='this.style.display = "none"' width="100" height="100" alt="">
 					<h3>Login</h3>
 					<p class="lead mb-0">Login to your account!</p>
 			  </a>
           </div>
 		  <div class="col-lg-3">
               <a href = '{% url 'register' %}'>
-					<img src="https://image.ibb.co/f3wvaL/register.png" width="100" height="100" alt="">
+					<img src="https://image.ibb.co/f3wvaL/register.png" onerror='this.style.display = "none"' width="100" height="100" alt="">
 					<h3>Register</h3>
 					<p class="lead mb-0">Create a new account!</p>
 			  </a>
